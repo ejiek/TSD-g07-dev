@@ -169,7 +169,25 @@ public class SystemStateController {
 			throw new ServerNotBoundException();
 		}
 	}
-	
+	/**
+	 * Gets the act coordinator. _t7
+	 *
+	 * @param userName the user name
+	 * @return the act coordinator
+	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+	 */
+	public ActCoordinator getActHospital(String userName) throws ServerNotBoundException, ServerOfflineException{
+		try {
+			return server.env().getActHospital(userName);
+		} catch (RemoteException e) {
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerOfflineException();
+		} catch (NotBoundException e) {
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerNotBoundException();
+		}
+	}
 	/**
 	 * Gets all the actor communication company in the server.
 	 *

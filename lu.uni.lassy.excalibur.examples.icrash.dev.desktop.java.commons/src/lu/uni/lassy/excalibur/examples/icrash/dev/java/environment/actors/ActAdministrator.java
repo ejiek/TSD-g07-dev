@@ -16,6 +16,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -38,7 +39,19 @@ public interface ActAdministrator extends ActAuthenticated {
 	public PtBoolean oeAddCoordinator(DtCoordinatorID aDtCoordinatorID,
 			DtLogin aDtLogin, DtPassword aDtPassword) throws RemoteException,
 			NotBoundException;
-
+	/**
+	 * Add a coordinator to the system, using the parameters passed. _t7
+	 *
+	 * @param aDtCoordinatorID The ID to use when creating the coordinator
+	 * @param aDtLogin The username to use when creating the coordinator
+	 * @param aDtPassword The password to use when creating the coordinator
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	public PtBoolean oeAddHospital(DtHospitalID aDtHospitalID,
+			DtLogin aDtLogin, DtPassword aDtPassword) throws RemoteException,
+			NotBoundException;
 	/**
 	 * Delete a coordinator to the system, using the parameters passed.
 	 *

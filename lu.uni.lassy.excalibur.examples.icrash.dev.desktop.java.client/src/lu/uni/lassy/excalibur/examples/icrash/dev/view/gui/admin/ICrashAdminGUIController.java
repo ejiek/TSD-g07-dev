@@ -26,6 +26,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOf
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
@@ -79,11 +80,11 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 
     /** The borderpane that contains the normal controls the user will use. */
     @FXML
-    private VBox vboxAdmin;
+    private VBox vboxAdmin;//_t7
 
     /** The anchorpane that will have the add or delete coordinator controls added/removed from it */
     @FXML
-    private AnchorPane anchrpnCoordinatorDetails;
+    private AnchorPane anchrpnDetails; //_t7
 
     /** The button that shows the controls for adding a coordinator */
     @FXML
@@ -214,8 +215,8 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 			txtfldAdminUserName.setText("");
 			psswrdfldAdminPassword.setText("");
 			txtfldAdminUserName.requestFocus();
-			for (int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
-				anchrpnCoordinatorDetails.getChildren().remove(i);
+			for (int i = anchrpnDetails.getChildren().size() -1; i >= 0; i--)
+				anchrpnDetails.getChildren().remove(i);
 		}
 		
 	}	
@@ -243,8 +244,8 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	 * @param type The type of edit to be done, this could be add or delete
 	 */
 	private void showCoordinatorScreen(TypeOfEdit type){
-		for(int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
-			anchrpnCoordinatorDetails.getChildren().remove(i);
+		for(int i = anchrpnDetails.getChildren().size() -1; i >= 0; i--)
+			anchrpnDetails.getChildren().remove(i);
 		TextField txtfldUserID = new TextField();
 		TextField txtfldUserName = new TextField();
 		PasswordField psswrdfldPassword = new PasswordField();
@@ -279,7 +280,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 						case Add:
 							if (userController.oeAddCoordinator(txtfldUserID.getText(), txtfldUserName.getText(), psswrdfldPassword.getText()).getValue()){
 								listOfOpenWindows.add(new CreateICrashCoordGUI(coordID, systemstateController.getActCoordinator(txtfldUserName.getText())));
-								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+								anchrpnDetails.getChildren().remove(grdpn);
 							}
 							else
 								showErrorMessage("Unable to add coordinator", "An error occured when adding the coordinator");
@@ -290,7 +291,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 									if (window.getDtCoordinatorID().value.getValue().equals(coordID.value.getValue()))
 										window.closeWindow();
 								}
-								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+								anchrpnDetails.getChildren().remove(grdpn);
 							}
 							else
 								showErrorMessage("Unable to delete coordinator", "An error occured when deleting the coordinator");
@@ -302,7 +303,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 				}
 			}
 		});
-		anchrpnCoordinatorDetails.getChildren().add(grdpn);
+		anchrpnDetails.getChildren().add(grdpn);
 		AnchorPane.setTopAnchor(grdpn, 0.0);
 		AnchorPane.setLeftAnchor(grdpn, 0.0);
 		AnchorPane.setBottomAnchor(grdpn, 0.0);
@@ -316,8 +317,8 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	 * @param type The type of edit to be done, this could be add or delete
 	 */
 	private void showHospitalScreen(TypeOfEdit type){
-		for(int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
-			anchrpnCoordinatorDetails.getChildren().remove(i);
+		for(int i = anchrpnDetails.getChildren().size() -1; i >= 0; i--)
+			anchrpnDetails.getChildren().remove(i);
 		TextField txtfldUserID = new TextField();
 		TextField txtfldUserName = new TextField();
 		PasswordField psswrdfldPassword = new PasswordField();
@@ -347,26 +348,26 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 					showWarningNoDataEntered();
 				else{
 					try {
-						DtCoordinatorID coordID = new DtCoordinatorID(new PtString(txtfldUserID.getText()));
+						DtHospitalID hospitalID = new DtHospitalID(new PtString(txtfldUserID.getText()));
 						switch(type){
 						case Add:
-							if (userController.oeAddCoordinator(txtfldUserID.getText(), txtfldUserName.getText(), psswrdfldPassword.getText()).getValue()){
-								listOfOpenWindows.add(new CreateICrashCoordGUI(coordID, systemstateController.getActCoordinator(txtfldUserName.getText())));
-								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+							if (userController.oeAddHospital(txtfldUserID.getText(), txtfldUserName.getText(), psswrdfldPassword.getText()).getValue()){
+								listOfOpenWindows.add(new CreateICrashHospitalGUI(hospitalID, systemstateController.getActHospital(txtfldUserName.getText())));
+								anchrpnDetails.getChildren().remove(grdpn);
 							}
 							else
-								showErrorMessage("Unable to add coordinator", "An error occured when adding the coordinator");
+								showErrorMessage("Unable to add hospital", "An error occured when adding the hospital");
 							break;
 						case Delete:
-							if (userController.oeDeleteCoordinator(txtfldUserID.getText()).getValue()){
-								for(CreateICrashCoordGUI window : listOfOpenWindows){
-									if (window.getDtCoordinatorID().value.getValue().equals(coordID.value.getValue()))
+							if (userController.oeDeleteHospital(txtfldUserID.getText()).getValue()){
+								for(CreateICrashHospitalGUI window : listOfOpenWindows){
+									if (window.getDtHospitalID().value.getValue().equals(hospitalID.value.getValue()))
 										window.closeWindow();
 								}
-								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+								anchrpnDetails.getChildren().remove(grdpn);
 							}
 							else
-								showErrorMessage("Unable to delete coordinator", "An error occured when deleting the coordinator");
+								showErrorMessage("Unable to delete hospital", "An error occured when deleting the hospital");
 							break;
 						}
 					} catch (ServerOfflineException | ServerNotBoundException | IncorrectFormatException e) {
@@ -375,7 +376,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 				}
 			}
 		});
-		anchrpnCoordinatorDetails.getChildren().add(grdpn);
+		anchrpnDetails.getChildren().add(grdpn);
 		AnchorPane.setTopAnchor(grdpn, 0.0);
 		AnchorPane.setLeftAnchor(grdpn, 0.0);
 		AnchorPane.setBottomAnchor(grdpn, 0.0);

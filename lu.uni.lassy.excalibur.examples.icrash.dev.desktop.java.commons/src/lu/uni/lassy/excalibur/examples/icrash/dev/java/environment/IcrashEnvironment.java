@@ -115,6 +115,14 @@ public interface IcrashEnvironment  extends Remote {
 	 */
 	public ActCoordinator getActCoordinator(String keyName) throws RemoteException;
 
+	/**		
+	 * Gets the actor coordinator from the hashtable using the key value provided.	_t7
+	 *
+	 * @param keyName The login name of the coordinator to retrieve
+	 * @return The actor retrieved from the database, can be null if one does not exist within the hashtable with the correct key
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public ActCoordinator getActHospital(String keyName) throws RemoteException;
 	/**
 	 * Gets the entire hashtable of actor communication companies in the system.
 	 *

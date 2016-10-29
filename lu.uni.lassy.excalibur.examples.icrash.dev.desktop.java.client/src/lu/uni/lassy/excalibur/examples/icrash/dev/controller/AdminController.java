@@ -23,6 +23,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdm
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAuthenticated.UserType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIs;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -67,6 +68,38 @@ public class AdminController extends AbstractUserController {
 			ht.put(aDtPassword, aDtPassword.value.getValue());
 			try {
 				return actorAdmin.oeAddCoordinator(aDtCoordinatorID, aDtLogin, aDtPassword);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+	}
+	/** _t7
+	 * If an administrator is logged in, will send an addCoordinator request to the server. If successful, it will return a PtBoolean of true
+	 * @param coordinatorID The ID of the coordinator to create, the user specifies the ID, not the system in the creation process
+	 * @param login The logon of the user to create. This is the username they will use at point of logon at the client front end
+	 * @param password The password of the user to create. This is the password they will use at point of logon at the client front end
+	 * @return Returns a PtBoolean true if the user was created, otherwise will return false
+	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+	 * @throws IncorrectFormatException is thrown when a Dt/Et information type does not match the is() method specified in the specification
+	 */
+	public PtBoolean oeAddHospital(String hospitalID, String login, String password) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException{
+		if (getUserType() == UserType.Admin){
+			ActProxyAdministratorImpl actorAdmin = (ActProxyAdministratorImpl)getAuth();
+			DtHospitalID aDtHospitalID = new DtHospitalID(new PtString(hospitalID));
+			DtLogin aDtLogin = new DtLogin(new PtString(login));
+			DtPassword aDtPassword = new DtPassword(new PtString(password));
+			Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
+			ht.put(aDtHospitalID, aDtHospitalID.value.getValue());
+			ht.put(aDtLogin, aDtLogin.value.getValue());
+			ht.put(aDtPassword, aDtPassword.value.getValue());
+			try {
+				return actorAdmin.oeAddHospital(aDtHospitalID, aDtLogin, aDtPassword);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
