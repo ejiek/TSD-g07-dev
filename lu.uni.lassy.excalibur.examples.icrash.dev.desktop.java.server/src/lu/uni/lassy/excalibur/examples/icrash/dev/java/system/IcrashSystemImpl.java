@@ -34,13 +34,18 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCom
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompanyImpl;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinatorImpl;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospitalImpl;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbAlerts;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbComCompanies;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCoordinators;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCrises;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHospitals;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHumans;
+//import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.Hospitals;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAuthenticated;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
@@ -51,6 +56,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
@@ -125,6 +131,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	
 	/**  A hashtable of the joint class coordinators and actors coordiantors in the system, stored by their class type. */
 	Hashtable<CtCoordinator, ActCoordinator> assCtCoordinatorActCoordinator = new Hashtable<CtCoordinator, ActCoordinator>();
+
+	/**  A hashtable of the joint class coordinators and actors Hospitals in the system, stored by their class type. */
+	Hashtable<CtHospital, ActHospital> assCtHospitalActHospital = new Hashtable<CtHospital, ActHospital>();
 	
 	/**  A hashtable of the joint crises and coordinators in the system, stored by their crisis as a key. */
 	Hashtable<CtCrisis, CtCoordinator> assCtCrisisCtCoordinator = new Hashtable<CtCrisis, CtCoordinator>();
@@ -1005,6 +1014,17 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				}
 				return new PtBoolean(true);
 			}
+			if (currentRequestingAuthenticatedActor instanceof ActHospital) {
+				ActHospital aActHospital = (ActHospital) currentRequestingAuthenticatedActor;
+				//go through all existing crises
+				for (String crisisKey : cmpSystemCtCrisis.keySet()) {
+					CtCrisis crisis = cmpSystemCtCrisis.get(crisisKey);
+					if (crisis.status.toString().equals(aEtCrisisStatus.toString()))
+						//PostF1
+						crisis.isSentToHospital(aActHospital);
+				}
+				return new PtBoolean(true);
+			}
 		}
 		catch (Exception e){
 			log.error("Exception in oeGetCrisisSet..." + e);
@@ -1226,7 +1246,46 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 
 		return new PtBoolean(true);
 	}
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeAddHospital(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword)
+	 */
+	public PtBoolean oeAddHospital(DtHospitalID aDtHospitalID,
+			DtLogin aDtLogin, DtPassword aDtPassword) throws RemoteException {
+		try {
+			//PreP1
+			isSystemStarted();
+			//PreP2
+			isAdminLoggedIn();
+			Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(), RmiUtils.getInstance().getPort());
+			IcrashEnvironment env = (IcrashEnvironment) registry
+					.lookup("iCrashEnvironment");
+			//PostF1
+			ActHospital actHospital = new ActHospitalImpl(aDtLogin);
+			env.setActHospital(aDtLogin.value.getValue(), actHospital);
 
+			//PostF2
+			CtHospital ctHospital = new CtHospital();
+			ctHospital.init(aDtHospitalID, aDtLogin, aDtPassword);
+			DbHospitals.insertHospital(ctHospital);
+			
+			
+			//PostF3 and PostF4 done at once w.r.t. our implementation
+			assCtAuthenticatedActAuthenticated.put(ctHospital,
+					actHospital);
+
+			//Update composition relationships
+			cmpSystemCtAuthenticated.put(aDtLogin.value.getValue(),
+					ctHospital);
+			assCtHospitalActHospital.put(ctHospital, actHospital);
+			//PostF5
+			ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+			admin.ieHospitalAdded();
+		} catch (Exception ex) {
+			log.error("Exception in oeAddHospital..." + ex);
+		}
+
+		return new PtBoolean(true);
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeDeleteCoordinator(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID)
 	 */
@@ -1255,6 +1314,33 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeDeleteHospital(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID)
+	 */
+	public PtBoolean oeDeleteHospital(DtHospitalID aDtHospitalID) throws RemoteException {
+//		try {
+//			//PreP1
+//			isSystemStarted();
+//			//PreP2
+//			isAdminLoggedIn();
+//			CtAuthenticated ctAuth = getCtHospital(aDtHospitalID);
+//			if (ctAuth != null && ctAuth instanceof CtHospital) {
+//				CtHospital aCtHospital = (CtHospital)ctAuth;
+//				DbHospital.deleteHospital(aCtHospital);
+//				//PostF1
+//				assCtAuthenticatedActAuthenticated.remove(ctAuth);
+//				cmpSystemCtAuthenticated.remove(ctAuth.login.value.getValue());
+//				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+//				//PostF2
+//				admin.ieHospitalDeleted();
+//				return new PtBoolean(true);
+//			}
+//			return new PtBoolean(false);
+//		} catch (Exception e) {
+//			log.error("Exception in oeDeleteCoordinator..." + e);
+			return new PtBoolean(false);
+//		}
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeUpdateCoordinator(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword)
 	 */

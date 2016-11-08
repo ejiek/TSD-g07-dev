@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.IcrashEnvironment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -139,6 +140,18 @@ public class CtCrisis implements Serializable {
 		return new PtBoolean(true);
 	}
 	
+	/**
+	 * Used to provide a given hospital with current alert information.
+	 *
+	 * @param aActHospital the actor hospital to send the information to
+	 * @return the success of the method
+	 * @throws RemoteException Thrown if the remote destination is unreachable
+	 */
+	public PtBoolean isSentToHospital(ActHospital aActHospital) throws RemoteException {
+		
+		aActHospital.ieSendACrisis(this);
+		return new PtBoolean(true);
+	}
 	/**
 	 * Used to allocate a crisis to a coordinator if any or to alert the administrator of crisis waiting to be handled.
 	 *

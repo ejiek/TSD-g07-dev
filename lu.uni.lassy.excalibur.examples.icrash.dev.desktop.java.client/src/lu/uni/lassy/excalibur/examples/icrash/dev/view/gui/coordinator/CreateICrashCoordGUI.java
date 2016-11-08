@@ -39,7 +39,7 @@ public class CreateICrashCoordGUI implements CreatedWindows {
 		this._aDtCoordinatorID = aDtCoordinatorID;
 		start(aActCoordinator);
 	}
-	
+
 	/** The Coordinator ID that was used to create this window, it's used to work out which windows to close when a coordinator has been deleted. */
 	private DtCoordinatorID _aDtCoordinatorID;
 	

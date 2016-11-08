@@ -22,6 +22,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAct
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActMsrCreator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
@@ -177,7 +178,7 @@ public class SystemStateController {
 	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
 	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
 	 */
-	public ActCoordinator getActHospital(String userName) throws ServerNotBoundException, ServerOfflineException{
+	public ActHospital getActHospital(String userName) throws ServerNotBoundException, ServerOfflineException{
 		try {
 			return server.env().getActHospital(userName);
 		} catch (RemoteException e) {

@@ -18,9 +18,9 @@ import java.util.Hashtable;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAuthenticated.UserType;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIs;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
@@ -30,22 +30,22 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
-import lu.uni.lassy.excalibur.examples.icrash.dev.model.actors.ActProxyCoordinatorImpl;
+import lu.uni.lassy.excalibur.examples.icrash.dev.model.actors.ActProxyHospitalImpl;
 
 /**
- * The Class CoordinatorController.
+ * The Class HospitalController.
  */
-public class CoordinatorController extends AbstractUserController {
+public class HospitalController extends AbstractUserController {
 
 	/**
-	 * Instantiates a new coordinator controller.
+	 * Instantiates a new hospital controller.
 	 *
-	 * @param aActCoord the a act coord
+	 * @param aActHospital the a act hospital
 	 * @throws RemoteException the remote exception
 	 * @throws NotBoundException the not bound exception
 	 */
-	public CoordinatorController(ActCoordinator aActCoord ) throws RemoteException, NotBoundException{
-		super(new ActProxyCoordinatorImpl(aActCoord));
+	public HospitalController(ActHospital aActHospital ) throws RemoteException, NotBoundException{
+		super(new ActProxyHospitalImpl(aActHospital));
 	}
 	/**
 	 * Takes an crisis that exists in the system and will change it's status to the one specified.
@@ -62,10 +62,10 @@ public class CoordinatorController extends AbstractUserController {
 		Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
 		ht.put(aDtCrisisID, aDtCrisisID.value.getValue());
 		ht.put(status, status.name());
-		if (this.getUserType() == UserType.Coordinator){
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeSetCrisisStatus(aDtCrisisID, status);
+				return actHospital.oeSetCrisisStatus(aDtCrisisID, status);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
@@ -89,10 +89,10 @@ public class CoordinatorController extends AbstractUserController {
 		DtCrisisID aDtCrisisID = new DtCrisisID(new PtString(crisisID));
 		Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
 		ht.put(aDtCrisisID, aDtCrisisID.value.getValue());
-		if (this.getUserType() == UserType.Coordinator){
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeSetCrisisHandler(aDtCrisisID);
+				return actHospital.oeSetCrisisHandler(aDtCrisisID);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
@@ -117,10 +117,10 @@ public class CoordinatorController extends AbstractUserController {
 		DtCrisisID aDtCrisisID = new DtCrisisID(new PtString(crisisID));
 		Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
 		ht.put(aDtCrisisID, aDtCrisisID.value.getValue());
-		if (this.getUserType() == UserType.Coordinator){
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeCloseCrisis(aDtCrisisID);
+				return actHospital.oeCloseCrisis(aDtCrisisID);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
@@ -148,10 +148,10 @@ public class CoordinatorController extends AbstractUserController {
 		Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
 		ht.put(aDtCrisisID, aDtCrisisID.value.getValue());
 		ht.put(aDtComment, aDtComment.value.getValue());
-		if (this.getUserType() == UserType.Coordinator){
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeReportOnCrisis(aDtCrisisID, aDtComment);
+				return actHospital.oeReportOnCrisis(aDtCrisisID, aDtComment);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
@@ -175,10 +175,10 @@ public class CoordinatorController extends AbstractUserController {
 		DtAlertID aDtAlertID = new DtAlertID(new PtString(alertID));
 		Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
 		ht.put(aDtAlertID, aDtAlertID.value.getValue());
-		if (this.getUserType() == UserType.Coordinator){
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeValidateAlert(aDtAlertID);
+				return actHospital.oeValidateAlert(aDtAlertID);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
@@ -203,10 +203,10 @@ public class CoordinatorController extends AbstractUserController {
 		DtAlertID aDtAlertID = new DtAlertID(new PtString(alertID));
 		Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
 		ht.put(aDtAlertID, aDtAlertID.value.getValue());
-		if (this.getUserType() == UserType.Coordinator){
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeInvalidateAlert(aDtAlertID);
+				return actHospital.oeInvalidateAlert(aDtAlertID);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
@@ -228,11 +228,11 @@ public class CoordinatorController extends AbstractUserController {
 	 * @throws ServerNotBoundException Thrown if the server is not bound
 	 */
 	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) throws ServerOfflineException, ServerNotBoundException{
-		if (this.getUserType() == UserType.Coordinator){
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!INNNNNNN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeGetCrisisSet(aEtCrisisStatus);
+				return actHospital.oeGetCrisisSet(aEtCrisisStatus);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
@@ -254,10 +254,10 @@ public class CoordinatorController extends AbstractUserController {
 	 * @throws ServerNotBoundException Thrown if the server is not bound
 	 */
 	public PtBoolean oeGetAlertSet(EtAlertStatus aEtAlertStatus) throws ServerOfflineException, ServerNotBoundException{
-		if (this.getUserType() == UserType.Coordinator){
-			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
-				return actCoord.oeGetAlertsSet(aEtAlertStatus);
+				return actHospital.oeGetAlertsSet(aEtAlertStatus);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();

@@ -76,6 +76,27 @@ public class ActProxyAdministratorImpl extends ActProxyAuthenticatedImpl impleme
 			return new PtBoolean(false);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#oeDeleteHospital(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID)
+	 */
+	synchronized public PtBoolean oeDeleteHospital(DtHospitalID aDtHospitalID) throws RemoteException, NotBoundException{
+		if(getServerSideActor() !=null)
+			return ((ActAdministrator) getServerSideActor()).oeDeleteHospital(aDtHospitalID);
+		else
+			return new PtBoolean(false);
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#ieHospitalAdded()
+	 */
+	public PtBoolean ieHospitalAdded(){
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.ieHospitalAdded received from system");
+		listOfMessages.add(new Message(MessageType.ieHospitalAdded));
+		return new PtBoolean(true);
+	}
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#ieCoordinatorAdded()
 	 */
@@ -114,4 +135,26 @@ public class ActProxyAdministratorImpl extends ActProxyAuthenticatedImpl impleme
 	public PtBoolean oeLogout() throws RemoteException, NotBoundException {
 		return super.oeLogout();
 	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#ieHospitalDeleted()
+	 */
+	public PtBoolean ieHospitalDeleted(){
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.ieHospitalDeleted received from system");
+		listOfMessages.add(new Message(MessageType.ieHospitalDeleted));
+		return new PtBoolean(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#ieHospitalUpdated()
+	 */
+	@Override
+	public PtBoolean ieHospitalUpdated() throws RemoteException {
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.ieHospitalUpdated received from system");
+		listOfMessages.add(new Message(MessageType.ieHospitalUpdated));
+		return new PtBoolean(true);
+	}
+
 }

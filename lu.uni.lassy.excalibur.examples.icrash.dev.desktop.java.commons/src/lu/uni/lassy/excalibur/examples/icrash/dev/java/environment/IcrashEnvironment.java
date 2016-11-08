@@ -16,6 +16,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActActivator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAuthenticated;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany;
@@ -107,6 +108,15 @@ public interface IcrashEnvironment  extends Remote {
 	public void setActCoordinator(String keyName, ActCoordinator aActCoordinator) throws RemoteException;
 	
 	/**
+	 * Puts an actor Hospital into the hashtable of the system.
+	 *
+	 * @param keyName The key of which to store the actor by, keeps this the same as that you use the get actor method. Currently we use the login name as the key
+	 * @param aActHospital The actor Hospital stored in the hashtable
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public void setActHospital(String keyName, ActHospital aActHospital) throws RemoteException;
+	
+	/**
 	 * Gets the actor coordinator from the hashtable using the key value provided.
 	 *
 	 * @param keyName The login name of the coordinator to retrieve
@@ -122,7 +132,7 @@ public interface IcrashEnvironment  extends Remote {
 	 * @return The actor retrieved from the database, can be null if one does not exist within the hashtable with the correct key
 	 * @throws RemoteException Thrown if the server is offline
 	 */
-	public ActCoordinator getActHospital(String keyName) throws RemoteException;
+	public ActHospital getActHospital(String keyName) throws RemoteException;
 	/**
 	 * Gets the entire hashtable of actor communication companies in the system.
 	 *

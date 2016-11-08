@@ -15,6 +15,7 @@ package lu.uni.lassy.excalibur.examples.icrash.dev.java.environment;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActActivator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAuthenticated;
@@ -48,6 +49,10 @@ public class IcrashEnvironmentImpl extends UnicastRemoteObject implements Icrash
 	 * Key = ActCoordinator's login's name*/
 	private Hashtable<String, ActCoordinator> coordinators = new Hashtable<String, ActCoordinator>();
 
+	/** The hospitals stored in the environment. 
+	 * Key = ActHospital's login's name*/
+	private Hashtable<String, ActHospital> hospitals = new Hashtable<String, ActHospital>();
+	
 	/** The instance of the environment. */
 	private static volatile IcrashEnvironmentImpl instance = null;
 	
@@ -153,7 +158,13 @@ public class IcrashEnvironmentImpl extends UnicastRemoteObject implements Icrash
 	public void setActCoordinator(String keyName, ActCoordinator aActCoordinator){
 		coordinators.put(keyName, aActCoordinator);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.IcrashEnvironment#setActHospital(java.lang.String, lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital)
+	 */
+	public void setActHospital(String keyName, ActHospital aActHospital){
+		hospitals.put(keyName, aActHospital);
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.IcrashEnvironment#getActCoordinator(java.lang.String)
 	 */
@@ -161,6 +172,12 @@ public class IcrashEnvironmentImpl extends UnicastRemoteObject implements Icrash
 		return coordinators.get(keyName);
 	}
 
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.IcrashEnvironment#getActCoordinator(java.lang.String)
+	 */
+	public ActHospital getActHospital(String keyName){
+		return hospitals.get(keyName);
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.IcrashEnvironment#getActComCompanies()
 	 */

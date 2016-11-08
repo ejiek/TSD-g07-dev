@@ -33,6 +33,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
 import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.coordinator.CreateICrashCoordGUI;
+import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.hospital.CreateICrashHospitalGUI;
 import javafx.scene.layout.GridPane;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -198,7 +199,15 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	 * The list of open windows in the system.
 	 * We open a new window when a coordinator is created, so we also should close the window if the coordinator is deleted 
 	 */
-	private ArrayList<CreateICrashCoordGUI> listOfOpenWindows = new ArrayList<CreateICrashCoordGUI>();
+	private ArrayList<CreateICrashCoordGUI> listOfOpenCoordinators = new ArrayList<CreateICrashCoordGUI>();
+	
+	/**
+	 * The list of open windows in the system.
+	 * We open a new window when a hospital is created, so we also should close the window if the hospital is deleted 
+	 */
+	private ArrayList<CreateICrashHospitalGUI> listOfOpenHospitals = new ArrayList<CreateICrashHospitalGUI>();
+	
+
 	/*
 	 * Methods used within the GUI
 	 */
@@ -279,7 +288,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 						switch(type){
 						case Add:
 							if (userController.oeAddCoordinator(txtfldUserID.getText(), txtfldUserName.getText(), psswrdfldPassword.getText()).getValue()){
-								listOfOpenWindows.add(new CreateICrashCoordGUI(coordID, systemstateController.getActCoordinator(txtfldUserName.getText())));
+								listOfOpenCoordinators.add(new CreateICrashCoordGUI(coordID, systemstateController.getActCoordinator(txtfldUserName.getText())));
 								anchrpnDetails.getChildren().remove(grdpn);
 							}
 							else
@@ -287,7 +296,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 							break;
 						case Delete:
 							if (userController.oeDeleteCoordinator(txtfldUserID.getText()).getValue()){
-								for(CreateICrashCoordGUI window : listOfOpenWindows){
+								for(CreateICrashCoordGUI window : listOfOpenCoordinators){
 									if (window.getDtCoordinatorID().value.getValue().equals(coordID.value.getValue()))
 										window.closeWindow();
 								}
@@ -352,7 +361,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 						switch(type){
 						case Add:
 							if (userController.oeAddHospital(txtfldUserID.getText(), txtfldUserName.getText(), psswrdfldPassword.getText()).getValue()){
-								listOfOpenWindows.add(new CreateICrashHospitalGUI(hospitalID, systemstateController.getActHospital(txtfldUserName.getText())));
+								listOfOpenHospitals.add(new CreateICrashHospitalGUI(hospitalID, systemstateController.getActHospital(txtfldUserName.getText())));
 								anchrpnDetails.getChildren().remove(grdpn);
 							}
 							else
@@ -360,7 +369,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 							break;
 						case Delete:
 							if (userController.oeDeleteHospital(txtfldUserID.getText()).getValue()){
-								for(CreateICrashHospitalGUI window : listOfOpenWindows){
+								for(CreateICrashHospitalGUI window : listOfOpenHospitals){
 									if (window.getDtHospitalID().value.getValue().equals(hospitalID.value.getValue()))
 										window.closeWindow();
 								}

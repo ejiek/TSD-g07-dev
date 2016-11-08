@@ -40,6 +40,15 @@ public class Message {
 		/** The ie coordinator updated. */
 		ieCoordinatorUpdated,
 		
+		/** The ie coordinator added. */
+		ieHospitalAdded,
+		
+		/** The ie coordinator deleted. */
+		ieHospitalDeleted,
+		
+		/** The ie coordinator updated. */
+		ieHospitalUpdated,
+		
 		/** The ie sms send. */
 		ieSmsSend
 	}

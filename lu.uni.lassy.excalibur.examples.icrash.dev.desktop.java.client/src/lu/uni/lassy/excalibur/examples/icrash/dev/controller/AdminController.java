@@ -138,4 +138,32 @@ public class AdminController extends AbstractUserController {
 		}
 		return new PtBoolean(false);
 	}
+	/**
+	 * If an administrator is logged in, will send a deleteHospital request to the server. If successful, it will return a PtBoolean of true
+	 * @param hospitalID The ID of the Hospital to delete
+	 * @return Returns a PtBoolean true if the user was deleted, otherwise will return false
+	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+	 * @throws IncorrectFormatException is thrown when a Dt/Et information type does not match the is() method specified in the specification
+	 */
+	public PtBoolean oeDeleteHospital(String hospitalID) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException{
+		if (getUserType() == UserType.Admin){
+			ActProxyAdministratorImpl actorAdmin = (ActProxyAdministratorImpl)getAuth();
+			DtHospitalID aDtHospitalID = new DtHospitalID(new PtString(hospitalID));
+			Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
+			ht.put(aDtHospitalID, aDtHospitalID.value.getValue());
+			if (!aDtHospitalID.is().getValue())
+				return new PtBoolean(false);
+			try {
+				return actorAdmin.oeDeleteHospital(aDtHospitalID);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+	}
 }

@@ -63,6 +63,17 @@ public interface ActAdministrator extends ActAuthenticated {
 	public PtBoolean oeDeleteCoordinator(DtCoordinatorID aDtCoordinatorID)
 			throws RemoteException, NotBoundException;
 	
+	
+	/**
+	 * Delete a Hospital to the system, using the parameters passed.
+	 *
+	 * @param aDtHospitalID The ID to use when looking for the Hospital to delete
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	public PtBoolean oeDeleteHospital(DtHospitalID aDtHospitalID)
+			throws RemoteException, NotBoundException;
 	/**
 	 * A message sent to the listening actor saying the coordinator was created .
 	 *
@@ -71,6 +82,14 @@ public interface ActAdministrator extends ActAuthenticated {
 	 */
 	public PtBoolean ieCoordinatorAdded() throws RemoteException;
 
+	/**
+	 * A message sent to the listening actor saying the Hospital was created .
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean ieHospitalAdded() throws RemoteException;
+	
 	/**
 	 * A message sent to the listening actor saying the coordinator was deleted.
 	 *
@@ -86,4 +105,12 @@ public interface ActAdministrator extends ActAuthenticated {
 	 * @throws RemoteException Thrown if the server is offline
 	 */
 	public PtBoolean ieCoordinatorUpdated() throws RemoteException;	
+	
+	/**
+	 * A message sent to the listening actor saying the Hospital was updated.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean ieHospitalUpdated() throws RemoteException;
 }

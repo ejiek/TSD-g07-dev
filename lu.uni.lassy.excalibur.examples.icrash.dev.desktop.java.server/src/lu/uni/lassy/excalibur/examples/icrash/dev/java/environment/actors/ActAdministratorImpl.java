@@ -137,6 +137,33 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 	}
 
 	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator#oeDeleteHospital(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID)
+	 */
+	synchronized public PtBoolean oeDeleteHospital(
+			DtHospitalID aDtHospitalID) throws RemoteException,
+			NotBoundException {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry
+				.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAdministrator.oeDeleteCoordinator sent to system");
+		PtBoolean res = iCrashSys_Server.oeDeleteHospital(aDtHospitalID);
+
+		if (res.getValue() == true)
+			log.info("operation oeDeleteHospital successfully executed by the system");
+
+		return res;
+		
+	}
+	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator#ieCoordinatorAdded()
 	 */
 	public PtBoolean ieCoordinatorAdded() {
@@ -191,4 +218,59 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 		return new PtBoolean(true);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator#ieHospitalAdded()
+	 */
+	public PtBoolean ieHospitalAdded() {
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator
+				.hasNext();) {
+			ActProxyAuthenticated aProxy = iterator.next();
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).ieHospitalAdded();
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		return new PtBoolean(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator#ieHospitalDeleted()
+	 */
+	public PtBoolean ieHospitalDeleted() {
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator
+				.hasNext();) {
+			ActProxyAuthenticated aProxy = iterator.next();
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).ieHospitalDeleted();
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		return new PtBoolean(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator#ieHospitalUpdated()
+	 */
+	@Override
+	public PtBoolean ieHospitalUpdated() throws RemoteException {
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator
+				.hasNext();) {
+			ActProxyAuthenticated aProxy = iterator.next();
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).ieHospitalUpdated();
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		return new PtBoolean(true);
+	}
 }

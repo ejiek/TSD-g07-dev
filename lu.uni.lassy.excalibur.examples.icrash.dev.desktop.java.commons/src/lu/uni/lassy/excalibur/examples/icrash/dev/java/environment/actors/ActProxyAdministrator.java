@@ -72,5 +72,28 @@ public interface ActProxyAdministrator extends ActProxyAuthenticated {
 	 */
 	public PtBoolean ieCoordinatorUpdated() throws RemoteException;
 	
+	/**
+	 * A message received from the server side actor saying the Hospital was created .
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean ieHospitalAdded() throws RemoteException;
+	
+	/**
+	 * A message received from the server side actor saying the Hospital was deleted.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean ieHospitalDeleted() throws RemoteException;
+	
+	/**
+	 * A message received from the server side actor saying the Hospital was updated.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean ieHospitalUpdated() throws RemoteException;
 	
 }

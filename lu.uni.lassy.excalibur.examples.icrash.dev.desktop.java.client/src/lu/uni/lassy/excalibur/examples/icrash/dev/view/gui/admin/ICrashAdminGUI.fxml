@@ -51,12 +51,12 @@
                      <children>
                         <HBox prefHeight="53.0" prefWidth="240.0">
                            <children>
-                              <Button id="bttnBottomAdminCoordinatorAddACoordinator" fx:id="bttnBottomAdminCoordinatorAddACoordinator" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorAddACoordinator_OnClick" prefHeight="50.0" prefWidth="120.0" text="Add a hospital" textAlignment="CENTER" wrapText="true">
+                              <Button id="bttnBottomAdminCoordinatorAddAHospital" fx:id="bttnBottomAdminCoordinatorAddAHospital" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorAddAHospital_OnClick" prefHeight="50.0" prefWidth="120.0" text="Add a hospital" textAlignment="CENTER" wrapText="true">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Button>
-                              <Button id="bttnBottomAdminCoordinatorDeleteACoordinator" fx:id="bttnBottomAdminCoordinatorDeleteACoordinator" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorDeleteACoordinator_OnClick" prefHeight="50.0" prefWidth="140.0" text="Delete a hospital" textAlignment="CENTER" wrapText="true">
+                              <Button id="bttnBottomAdminCoordinatorDeleteAHospital" fx:id="bttnBottomAdminCoordinatorDeleteAHospital" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorDeleteAHospital_OnClick" prefHeight="50.0" prefWidth="140.0" text="Delete a hospital" textAlignment="CENTER" wrapText="true">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -65,12 +65,12 @@
                         </HBox>
                         <HBox prefHeight="53.0" prefWidth="240.0">
                            <children>
-                              <Button id="bttnBottomAdminCoordinatorAddAHospital" fx:id="bttnBottomAdminCoordinatorAddAHospital" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorAddACoordinator_OnClick" prefHeight="50.0" prefWidth="120.0" text="Add a coordinator" textAlignment="CENTER" wrapText="true">
+                              <Button id="bttnBottomAdminCoordinatorAddACoordinator" fx:id="bttnBottomAdminCoordinatorAddACoordinator" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorAddACoordinator_OnClick" prefHeight="50.0" prefWidth="120.0" text="Add a coordinator" textAlignment="CENTER" wrapText="true">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Button>
-                              <Button id="bttnBottomAdminCoordinatorDeleteAHospital" fx:id="bttnBottomAdminCoordinatorDeleteAHospital" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorDeleteACoordinator_OnClick" prefHeight="50.0" prefWidth="140.0" text="Delete a coordinator" textAlignment="CENTER" wrapText="true">
+                              <Button id="bttnBottomAdminCoordinatorDeleteACoordinator" fx:id="bttnBottomAdminCoordinatorDeleteACoordinator" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorDeleteACoordinator_OnClick" prefHeight="50.0" prefWidth="140.0" text="Delete a coordinator" textAlignment="CENTER" wrapText="true">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
