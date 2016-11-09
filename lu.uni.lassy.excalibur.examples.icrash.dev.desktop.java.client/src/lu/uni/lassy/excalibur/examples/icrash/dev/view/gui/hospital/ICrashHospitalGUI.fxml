@@ -29,13 +29,18 @@
                         <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
                               <Button id="bttnRefresh" fx:id="bttnRefresh" mnemonicParsing="false" onAction="#bttnRefresh_OnClick" text="Refresh" />
-                              <Button id="bttnShowVictims" fx:id="bttnShowVictims" onAction="#bttnShowVictimsForCrisis_OnClick" mnemonicParsing="false" text="Show victims" />
+                              <Button id="bttnShowVictims" fx:id="bttnShowVictims" mnemonicParsing="false" onAction="#bttnShowVictimsForCrisis_OnClick" text="Show victims" />
                               <ComboBox id="cmbbxCrisisStatus" fx:id="cmbbxCrisisStatus" prefWidth="150.0" />
                            </children>
                         </HBox>
                      </top>
                      <bottom>
-                        <TableView id="tblvwVictims" fx:id="tblvwVictims" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <TableView id="tblvwVictims" fx:id="tblvwVictims" prefHeight="200.0" prefWidth="200.0" />
+                              <TableView id="tblvwInjuries" fx:id="tblvwInjuries" prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </HBox>
                      </bottom>
                   </BorderPane>
                   <Pane id="pnLogon" fx:id="pnLogon" prefHeight="509.0" prefWidth="748.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

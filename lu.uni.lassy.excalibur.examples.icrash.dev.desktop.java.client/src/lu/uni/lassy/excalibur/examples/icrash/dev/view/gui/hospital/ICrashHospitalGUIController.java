@@ -31,6 +31,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntI
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -158,6 +159,10 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
     /** The tablview that shows the user the victims of crises they have selected. */
     @FXML
     private TableView<CtVictim> tblvwVictims;
+    
+    /** The tablview that shows the user the injuries of victim they have selected. */
+    @FXML
+    private TableView<CtInjury>tblvwInjuries;
     
     /** The tableview of the messages the user has recieved. */
     @FXML
@@ -327,8 +332,6 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 	 */
 	private void showCrisisVictims(){
 		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
-		System.out.println("TRUMP FOR THE WIN11111111111111111111111");
-		System.out.println(crisis.id);
 		VictimController victimController = new VictimController();
 		if (crisis != null){
 			try {
