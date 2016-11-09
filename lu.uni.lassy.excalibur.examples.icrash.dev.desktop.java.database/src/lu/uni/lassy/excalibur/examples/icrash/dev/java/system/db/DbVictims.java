@@ -323,7 +323,7 @@ public class DbVictims extends DbAbstract {
 
 			/********************/
 			//Select
-
+			System.out.println("beforeSelect!!!!!!!!!!!!!!");
 			try {
 				String sql = "SELECT * FROM " + dbName + ".victims ";
 
@@ -333,7 +333,7 @@ public class DbVictims extends DbAbstract {
 				CtVictim aCtVictim = null;
 
 				while (res.next()) {
-
+					System.out.println("HER!!!!!!!!!!!!!!");
 					aCtVictim = new CtVictim();
 					//crisis' id
 					DtVictimID aId = new DtVictimID(new PtString(

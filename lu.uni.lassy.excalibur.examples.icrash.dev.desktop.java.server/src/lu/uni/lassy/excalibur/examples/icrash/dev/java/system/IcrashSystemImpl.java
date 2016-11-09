@@ -42,6 +42,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCoordinators;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCrises;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHospitals;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHumans;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbVictims;
 //import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.Hospitals;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
@@ -51,6 +52,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
@@ -115,6 +117,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	
 	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
 	Hashtable<String, CtHuman> cmpSystemCtHuman = new Hashtable<String, CtHuman>();
+	
+	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
+	Hashtable<String, CtVictim> cmpSystemCtVictim = new Hashtable<String, CtVictim>();
 	
 	/**  A hashtable of the actor com companies in the system, stored by their name as a key. */
 	Hashtable<String, ActComCompany> cmpSystemActComCompany = new Hashtable<String, ActComCompany>();
@@ -605,6 +610,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			cmpSystemCtAlert = DbAlerts.getSystemAlerts();
 			cmpSystemCtCrisis = DbCrises.getSystemCrises();
 			cmpSystemCtHuman = DbHumans.getSystemHumans();
+			cmpSystemCtVictim = DbVictims.getSystemVictims();
+			
 			Hashtable<String, CtCoordinator> cmpSystemCtCoordinator = DbCoordinators.getSystemCoordinators();
 			for(CtCoordinator ctCoord: cmpSystemCtCoordinator.values()){
 				cmpSystemCtAuthenticated.put(ctCoord.login.value.getValue(), ctCoord);
@@ -1445,5 +1452,19 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			log.error("Exception in oeSetClock..." + ex);
 			return new PtBoolean(false);
 		}
+	}
+
+
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
+	 */
+	public ArrayList <CtVictim> getAllCtVictims() throws java.rmi.RemoteException{
+		ArrayList<CtVictim> result = new ArrayList<CtVictim>();
+		if (cmpSystemCtVictim != null){
+			for(CtVictim victim : cmpSystemCtVictim.values())
+				result.add(victim);
+		}
+		return result;
 	}
 }

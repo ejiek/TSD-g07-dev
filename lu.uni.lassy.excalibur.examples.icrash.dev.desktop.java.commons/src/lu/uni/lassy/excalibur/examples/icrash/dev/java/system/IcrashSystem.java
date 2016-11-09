@@ -28,6 +28,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
@@ -396,6 +397,14 @@ public interface IcrashSystem extends Remote {
 	 * @return The success of the method
 	 * @throws RemoteException Thrown if the server is offline
 	 */
-	public PtBoolean oeSetClock(DtDateAndTime aCurrentClock) throws RemoteException; 
+	public PtBoolean oeSetClock(DtDateAndTime aCurrentClock) throws RemoteException;
+
+	/**
+	 * Gets a list of all class type Victims in the system.
+	 *
+	 * @return A list of all class type Victims
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public ArrayList <CtVictim> getAllCtVictims() throws RemoteException;
 
 }

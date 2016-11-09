@@ -19,8 +19,10 @@ import java.util.ResourceBundle;
 
 import javafx.util.Callback;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.HospitalController;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.VictimController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectActorException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.NullValueException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
@@ -263,6 +265,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 	public void setUpTables(){
 		setUpMessageTables(tblvwHospitalMessages);
 		setUpCrisesTables(tblvwCrisis);
+		setUpVictimsTables(tblvwVictims);
 		//setUpAlertTables(tblvwAlerts);
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		//cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
@@ -279,6 +282,20 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 		}
 	}
 	
+	/**
+	 * Populates the tblvwCrisis with a list of crisis that have the same status as the one provided.
+	 */
+	private void populateVictims(){
+		VictimController victimController = new VictimController();
+		try {
+			addVictimsToTableView(tblvwVictims, victimController.getAllVictims());
+		} catch (ServerOfflineException | ServerNotBoundException e) {
+			showExceptionErrorMessage(e);
+		} catch (NullPointerException e){
+			Log4JUtils.getInstance().getLogger().error(e);
+			showExceptionErrorMessage(new NullValueException(this.getClass()));
+		}
+	}
 //	/**
 //	 * Populates the tableview with a list of alerts that have the same status as the one provided.
 //	 */
@@ -530,6 +547,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		setUpTables();
+		
 //		cmbbxAlertStatus.setOnAction(new EventHandler<ActionEvent>() {
 //			@Override
 //			public void handle(ActionEvent event) {
@@ -539,7 +557,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 		cmbbxCrisisStatus.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-
+				
 				populateCrisis();
 			}
 		});
@@ -563,6 +581,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
     @FXML
     void bttnRefresh_OnClick(ActionEvent event) {
     	populateCrisis();
+    	populateVictims();
     }
 
 	@Override

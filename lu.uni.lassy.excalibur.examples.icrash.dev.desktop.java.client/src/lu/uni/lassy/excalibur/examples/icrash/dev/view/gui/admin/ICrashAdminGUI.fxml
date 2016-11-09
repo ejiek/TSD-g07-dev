@@ -36,8 +36,8 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <TextField fx:id="txtfldAdminUserName" prefHeight="25.0" prefWidth="200.0" promptText="Username" GridPane.columnSpan="2" />
-                              <PasswordField fx:id="psswrdfldAdminPassword" prefHeight="25.0" prefWidth="200.0" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                              <TextField fx:id="txtfldAdminUserName" prefHeight="25.0" prefWidth="200.0" promptText="Username" text="icrashadmin" GridPane.columnSpan="2" />
+                              <PasswordField fx:id="psswrdfldAdminPassword" prefHeight="25.0" prefWidth="200.0" promptText="Password" text="7WXC1359" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                               <Button fx:id="bttnAdminLogin" defaultButton="true" mnemonicParsing="false" onAction="#bttnBottomLoginPaneLogin_OnClick" text="Logon" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="System Bold" size="12.0" />

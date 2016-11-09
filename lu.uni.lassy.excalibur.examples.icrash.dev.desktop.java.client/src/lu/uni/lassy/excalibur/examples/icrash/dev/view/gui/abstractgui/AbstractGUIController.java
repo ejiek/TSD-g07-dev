@@ -47,6 +47,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
@@ -528,6 +529,28 @@ public abstract class AbstractGUIController implements Initializable {
 	}
 	
 	/**
+	 * Sets up the Victim tableviews with the correct columns.
+	 *
+	 * @param tblvw The tableview to add the columns to
+	 */
+	public void setUpVictimsTables(TableView<CtVictim> tblvw){
+		TableColumn<CtVictim, String> idCol = new TableColumn<CtVictim, String>("id");
+		TableColumn<CtVictim, String> crisisIDCol = new TableColumn<CtVictim, String>("crisis_id");
+		idCol.setCellValueFactory(new Callback<CellDataFeatures<CtVictim, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtVictim, String> victim) {
+				return new ReadOnlyObjectWrapper<String>(victim.getValue().id.value.getValue());
+			}
+		});
+		crisisIDCol.setCellValueFactory(new Callback<CellDataFeatures<CtVictim, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtVictim, String> victim) {
+				return new ReadOnlyObjectWrapper<String>(victim.getValue().crisis_id.value.getValue());
+			}
+		});
+		tblvw.getColumns().add(idCol);
+		tblvw.getColumns().add(crisisIDCol);
+		setColumnsSameWidth(tblvw);
+	}
+	/**
 	 * Sets up the communication company tableviews with the correct columns.
 	 *
 	 * @param tblvw The tableview to add the columns to
@@ -720,6 +743,17 @@ public abstract class AbstractGUIController implements Initializable {
 	 * @param listOfItems the list of items to add to the tableview
 	 */
 	public void addHumansToTableView(TableView<CtHuman> tblvw, ArrayList<CtHuman> listOfItems){
+		tblvw.getItems().clear();
+		tblvw.getItems().addAll(listOfItems);
+	}
+	
+	/**
+	 * Adds the provided list of Victims to the tableview.
+	 *
+	 * @param tblvw The tableview to add the data to
+	 * @param listOfItems the list of items to add to the tableview
+	 */
+	public void addVictimsToTableView(TableView<CtVictim> tblvw, ArrayList<CtVictim> listOfItems){
 		tblvw.getItems().clear();
 		tblvw.getItems().addAll(listOfItems);
 	}

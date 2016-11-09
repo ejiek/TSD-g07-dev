@@ -68,7 +68,7 @@ public class CtVictim implements Serializable {
 	 */
 	@Override
 	public String toString(){
-		return this.id.value.getValue();
+		return this.id.value.getValue()+"+"+this.crisis_id.value.getValue();
 	}
 	
 	/* (non-Javadoc)
