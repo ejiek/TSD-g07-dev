@@ -454,11 +454,13 @@ public abstract class AbstractGUIController implements Initializable {
 		TableColumn<CtCrisis, Double> latitudeCol = new TableColumn<CtCrisis, Double>("Latitude");
 		TableColumn<CtCrisis, String> commentCol = new TableColumn<CtCrisis, String>("Comment");
 		TableColumn<CtCrisis, String> statusCol = new TableColumn<CtCrisis, String>("Status");
+		
 		idCol.setCellValueFactory(new Callback<CellDataFeatures<CtCrisis, String>, ObservableValue<String>>() {
 			public ObservableValue<String> call(CellDataFeatures<CtCrisis, String> alert) {
 				return new ReadOnlyObjectWrapper<String>(alert.getValue().id.value.getValue());
 			}
 		});
+		
 		dateCol.setCellValueFactory(new Callback<CellDataFeatures<CtCrisis, String>, ObservableValue<String>>() {
 			public ObservableValue<String> call(CellDataFeatures<CtCrisis, String> crisis) {
 				return new ReadOnlyObjectWrapper<String>(crisis.getValue().instant.date.toString());
@@ -807,6 +809,7 @@ public abstract class AbstractGUIController implements Initializable {
 		}
 		return tblvw.getSelectionModel().getSelectedItem();
 	}
+	
 	
 	/**
 	 * Checks the gridpane and all the controls inside and sees if they have data entered.

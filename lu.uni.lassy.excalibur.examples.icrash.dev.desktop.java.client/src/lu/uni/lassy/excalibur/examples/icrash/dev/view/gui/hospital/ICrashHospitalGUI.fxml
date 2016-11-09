@@ -29,6 +29,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
                               <Button id="bttnRefresh" fx:id="bttnRefresh" mnemonicParsing="false" onAction="#bttnRefresh_OnClick" text="Refresh" />
+                              <Button id="bttnShowVictims" fx:id="bttnShowVictims" onAction="#bttnShowVictimsForCrisis_OnClick" mnemonicParsing="false" text="Show victims" />
                               <ComboBox id="cmbbxCrisisStatus" fx:id="cmbbxCrisisStatus" prefWidth="150.0" />
                            </children>
                         </HBox>

@@ -1467,4 +1467,21 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		}
 		return result;
 	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
+	 */
+	public ArrayList <CtVictim> getCrisisCtVictims(DtCrisisID aCrisis_id) throws java.rmi.RemoteException{
+		ArrayList<CtVictim> result = new ArrayList<CtVictim>();
+		if (cmpSystemCtVictim != null){
+			for(CtVictim victim : cmpSystemCtVictim.values()){
+			System.out.println("MAKE MURICA GREAT AGAIN1111111111111111");
+			System.out.println(aCrisis_id + " == " + victim.crisis_id + "?");
+				if (aCrisis_id.toString().equals(victim.crisis_id.toString())){
+					result.add(victim);
+				}
+			}
+		}
+		return result;
+	}
 }

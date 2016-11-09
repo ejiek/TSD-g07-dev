@@ -95,6 +95,10 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
     /** The button that allows a user to initiate the logon function. */
     @FXML
     private Button bttnHospitalLogon;
+    
+    /** The button that allows a user to initiate the logon function. */
+    @FXML
+    private Button bttnShowVictims;
 
 //    /** The main tabpane that holds the normal user controls. */
 //    @FXML
@@ -184,6 +188,16 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 //    }
 
     /**
+     * Table event that deals with choosing the crisis
+     *
+     * @param event The event type fired, we do not need it's details
+     */
+    @FXML
+    void bttnShowVictimsForCrisis_OnClick(ActionEvent event) {
+    	showCrisisVictims();
+    }
+    
+    /**
      * Button event that deals with logging off the user
      *
      * @param event The event type fired, we do not need it's details
@@ -269,6 +283,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 		//setUpAlertTables(tblvwAlerts);
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		//cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
+
 	}
 	
 	/**
@@ -307,23 +322,26 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 //		}
 //	}
 	
-//	/**
-//	 * Runs the function that will allow the current user to handle the selected crisis.
-//	 */
-//	private void handleCrisis(){
-//		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
-//		if (crisis != null){
-//			try {
-//				if (!userController.handleCrisis(crisis.id.value.getValue()).getValue())
-//					showWarningMessage("Unable to handle crisis", "Unable to handle crisis, please try again");
-//			} catch (ServerOfflineException | ServerNotBoundException e) {
-//				showServerOffLineMessage(e);
-//			} catch (IncorrectFormatException e) {
-//				showWarningIncorrectInformationEntered(e);
-//			}
-//		}
-//		populateCrisis();
-//	}
+	/**
+	 * Runs the function that will allow the current user to show victims of the selected crisis.
+	 */
+	private void showCrisisVictims(){
+		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
+		System.out.println("TRUMP FOR THE WIN11111111111111111111111");
+		System.out.println(crisis.id);
+		VictimController victimController = new VictimController();
+		if (crisis != null){
+			try {
+				addVictimsToTableView(tblvwVictims, victimController.getCrisisVictims(crisis.id));
+			} catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			} catch (NullPointerException e){
+				Log4JUtils.getInstance().getLogger().error(e);
+				showExceptionErrorMessage(new NullValueException(this.getClass()));
+			}
+		}
+		//populateCrisis();
+	}
 	
 //	/**
 //	 * Runs the function that will allow the current user to close the selected crisis.

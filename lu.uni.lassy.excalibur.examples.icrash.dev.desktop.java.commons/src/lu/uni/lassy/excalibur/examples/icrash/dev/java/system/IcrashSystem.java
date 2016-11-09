@@ -406,5 +406,14 @@ public interface IcrashSystem extends Remote {
 	 * @throws RemoteException Thrown if the server is offline
 	 */
 	public ArrayList <CtVictim> getAllCtVictims() throws RemoteException;
+	
+	/**
+	 * Gets a list of all class type Victims of the crisis.
+	 *
+	 * @param aCrisis_id id of the crisis
+	 * @return A list of all class type Victims
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public ArrayList <CtVictim> getCrisisCtVictims(DtCrisisID aCrisis_id) throws RemoteException;
 
 }
