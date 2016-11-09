@@ -62,9 +62,6 @@ public class VictimController {
 	 */
 	public ArrayList<CtVictim> getCrisisVictims(DtCrisisID aCrisis_id) throws ServerOfflineException, ServerNotBoundException{
 		try {
-//			if (server.sys().getAllCtVictims().isEmpty())
-			System.out.println("Hilory FOR THE WIN!111!!!!!!!!!!!!!!!!!!!!");
-			System.out.println(server.sys().getCrisisCtVictims(aCrisis_id));
 			return server.sys().getCrisisCtVictims(aCrisis_id);
 		} catch (RemoteException e) {
 			Log4JUtils.getInstance().getLogger().error(e);

@@ -1475,9 +1475,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		ArrayList<CtVictim> result = new ArrayList<CtVictim>();
 		if (cmpSystemCtVictim != null){
 			for(CtVictim victim : cmpSystemCtVictim.values()){
-			System.out.println("MAKE MURICA GREAT AGAIN1111111111111111");
-			System.out.println(aCrisis_id + " == " + victim.crisis_id + "?");
-				if (aCrisis_id.toString().equals(victim.crisis_id.toString())){
+				if (aCrisis_id.equals(victim.crisis_id)){
 					result.add(victim);
 				}
 			}

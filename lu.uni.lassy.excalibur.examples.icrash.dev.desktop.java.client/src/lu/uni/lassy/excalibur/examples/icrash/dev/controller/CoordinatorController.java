@@ -229,7 +229,6 @@ public class CoordinatorController extends AbstractUserController {
 	 */
 	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) throws ServerOfflineException, ServerNotBoundException{
 		if (this.getUserType() == UserType.Coordinator){
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!INNNNNNN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
 			try {
 				return actCoord.oeGetCrisisSet(aEtCrisisStatus);

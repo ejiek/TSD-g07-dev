@@ -40,6 +40,10 @@ public class DtCrisisID extends DtString implements JIntIs {
 	/** The maximum length the crisis ID can be. */
 	private int _maxLength = 10;
 	
+	public boolean equals(DtCrisisID rightID){
+		if (this.toString().equals(rightID.toString())) return true;
+		return false;
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.DtIs#is()
 	 */
