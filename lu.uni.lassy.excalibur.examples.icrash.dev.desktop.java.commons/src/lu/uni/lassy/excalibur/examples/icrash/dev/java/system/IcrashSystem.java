@@ -27,6 +27,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAu
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
@@ -38,6 +39,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -408,6 +410,14 @@ public interface IcrashSystem extends Remote {
 	public ArrayList <CtVictim> getAllCtVictims() throws RemoteException;
 	
 	/**
+	 * Gets a list of all class type Injuries in the system.
+	 *
+	 * @return A list of all class type Injuries
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public ArrayList <CtInjury> getAllCtInjuries() throws RemoteException;
+	
+	/**
 	 * Gets a list of all class type Victims of the crisis.
 	 *
 	 * @param aCrisis_id id of the crisis
@@ -416,4 +426,12 @@ public interface IcrashSystem extends Remote {
 	 */
 	public ArrayList <CtVictim> getCrisisCtVictims(DtCrisisID aCrisis_id) throws RemoteException;
 
+	/**
+	 * Gets a list of all class type Injuries of the victim.
+	 *
+	 * @param aVictim_id id of the victim
+	 * @return A list of all class type Injuries
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public ArrayList <CtInjury> getVictimCtInjuries(DtVictimID aVictim_id) throws RemoteException;
 }

@@ -51,6 +51,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAu
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
@@ -62,6 +63,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -120,6 +122,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	
 	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
 	Hashtable<String, CtVictim> cmpSystemCtVictim = new Hashtable<String, CtVictim>();
+	
+	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
+	Hashtable<String, CtInjury> cmpSystemCtInjury = new Hashtable<String, CtInjury>();
 	
 	/**  A hashtable of the actor com companies in the system, stored by their name as a key. */
 	Hashtable<String, ActComCompany> cmpSystemActComCompany = new Hashtable<String, ActComCompany>();
@@ -1457,13 +1462,25 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 
 	
 	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtVictim()
 	 */
 	public ArrayList <CtVictim> getAllCtVictims() throws java.rmi.RemoteException{
 		ArrayList<CtVictim> result = new ArrayList<CtVictim>();
 		if (cmpSystemCtVictim != null){
 			for(CtVictim victim : cmpSystemCtVictim.values())
 				result.add(victim);
+		}
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtVictim()
+	 */
+	public ArrayList <CtInjury> getAllCtInjuries() throws java.rmi.RemoteException{
+		ArrayList<CtInjury> result = new ArrayList<CtInjury>();
+		if (cmpSystemCtInjury != null){
+			for(CtInjury injury : cmpSystemCtInjury.values())
+				result.add(injury);
 		}
 		return result;
 	}
@@ -1477,6 +1494,21 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			for(CtVictim victim : cmpSystemCtVictim.values()){
 				if (aCrisis_id.equals(victim.crisis_id)){
 					result.add(victim);
+				}
+			}
+		}
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
+	 */
+	public ArrayList <CtInjury> getVictimCtInjuries(DtVictimID aVictim_id) throws java.rmi.RemoteException{
+		ArrayList<CtInjury> result = new ArrayList<CtInjury>();
+		if (cmpSystemCtInjury != null){
+			for(CtInjury injury : cmpSystemCtInjury.values()){
+				if (aVictim_id.equals(injury.victimID)){
+					result.add(injury);
 				}
 			}
 		}

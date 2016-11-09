@@ -17,30 +17,35 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Server;
 
 /**
- * The Victim controller deals with any functions to do with Victims in the system. This entails retrieval,
+ * The Injury controller deals with any functions to do with Injury in the system. This entails retrieval,
  * of data. It extends the AbstractController to handle checking of Dt information is correct
  */
-public class VictimController {
+public class InjuryController {
 	
 	/** Parameter that allows the system to gain server access, the server function lives in the model of the client and  has RMI calls to access the server. */
 	private Server server = Server.getInstance();
 	
 	/**
-	 * Returns a list of all Victim in the system.
+	 * Returns a list of all Injuries in the system.
 	 *
-	 * @return Returns an ArrayList of type CtVictim, which contains all Victims currently within the iCrashSystem
+	 * @return Returns an ArrayList of type CtInjury, which contains all Injuries currently within the iCrashSystem
 	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
 	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
 	 */
-	public ArrayList<CtVictim> getAllVictims() throws ServerOfflineException, ServerNotBoundException{
+	public ArrayList<CtInjury> getAllInjuries() throws ServerOfflineException, ServerNotBoundException{
 		try {
-			return server.sys().getAllCtVictims();
+//			if (server.sys().getAllCtVictims().isEmpty())
+//				System.out.println("NOTHING IN LIST!!!!!!!!!!!!!!!!!!!!");
+//			else System.out.println("SMTH IN LIST!!!!!!!!!!!!!!!!!!!!");
+			return server.sys().getAllCtInjuries();
 		} catch (RemoteException e) {
 			Log4JUtils.getInstance().getLogger().error(e);
 			throw new ServerOfflineException();
@@ -51,15 +56,15 @@ public class VictimController {
 	}
 	
 	/**
-	 * Returns a list of all Victim of the crisis.
+	 * Returns a list of all Injuries of the crisis.
 	 *
-	 * @return Returns an ArrayList of type CtVictim, which contains all Victims of the crisis
+	 * @return Returns an ArrayList of type CtInjury, which contains all Injuries of the victim
 	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
 	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
 	 */
-	public ArrayList<CtVictim> getCrisisVictims(DtCrisisID aCrisis_id) throws ServerOfflineException, ServerNotBoundException{
+	public ArrayList<CtInjury> getVictimInjuries(DtVictimID aVictim_id) throws ServerOfflineException, ServerNotBoundException{
 		try {
-			return server.sys().getCrisisCtVictims(aCrisis_id);
+			return server.sys().getVictimCtInjuries(aVictim_id);
 		} catch (RemoteException e) {
 			Log4JUtils.getInstance().getLogger().error(e);
 			throw new ServerOfflineException();

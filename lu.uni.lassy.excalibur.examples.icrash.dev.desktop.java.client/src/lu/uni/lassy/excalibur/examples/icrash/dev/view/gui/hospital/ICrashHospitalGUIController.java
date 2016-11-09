@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 
 import javafx.util.Callback;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.HospitalController;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.InjuryController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.VictimController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectActorException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
@@ -285,6 +286,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 		setUpMessageTables(tblvwHospitalMessages);
 		setUpCrisesTables(tblvwCrisis);
 		setUpVictimsTables(tblvwVictims);
+		setUpInjuriesTables(tblvwInjuries);
 		//setUpAlertTables(tblvwAlerts);
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		//cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
@@ -303,12 +305,27 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 	}
 	
 	/**
-	 * Populates the tblvwCrisis with a list of crisis that have the same status as the one provided.
+	 * Populates the tblvwVictims with a list of victims
 	 */
 	private void populateVictims(){
 		VictimController victimController = new VictimController();
 		try {
 			addVictimsToTableView(tblvwVictims, victimController.getAllVictims());
+		} catch (ServerOfflineException | ServerNotBoundException e) {
+			showExceptionErrorMessage(e);
+		} catch (NullPointerException e){
+			Log4JUtils.getInstance().getLogger().error(e);
+			showExceptionErrorMessage(new NullValueException(this.getClass()));
+		}
+	}
+	
+	/**
+	 * Populates the tblvwInjuries with a list of injuries
+	 */
+	private void populateInjuries(){
+		InjuryController injuryController = new InjuryController();
+		try {
+			addInjuriesToTableView(tblvwInjuries, injuryController.getAllInjuries());
 		} catch (ServerOfflineException | ServerNotBoundException e) {
 			showExceptionErrorMessage(e);
 		} catch (NullPointerException e){

@@ -46,6 +46,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAl
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
@@ -552,6 +553,30 @@ public abstract class AbstractGUIController implements Initializable {
 		tblvw.getColumns().add(crisisIDCol);
 		setColumnsSameWidth(tblvw);
 	}
+	
+	/**
+	 * Sets up the Injury tableviews with the correct columns.
+	 *
+	 * @param tblvw The tableview to add the columns to
+	 */
+	public void setUpInjuriesTables(TableView<CtInjury> tblvw){
+		TableColumn<CtInjury, String> idCol = new TableColumn<CtInjury, String>("id");
+		TableColumn<CtInjury, String> typeCol = new TableColumn<CtInjury, String>("body part");
+		idCol.setCellValueFactory(new Callback<CellDataFeatures<CtInjury, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtInjury, String> injury) {
+				return new ReadOnlyObjectWrapper<String>(injury.getValue().id.value.getValue());
+			}
+		});
+		typeCol.setCellValueFactory(new Callback<CellDataFeatures<CtInjury, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtInjury, String> injury) {
+				return new ReadOnlyObjectWrapper<String>(injury.getValue().kind.name());
+			}
+		});
+		tblvw.getColumns().add(idCol);
+		tblvw.getColumns().add(typeCol);
+		setColumnsSameWidth(tblvw);
+	}
+	
 	/**
 	 * Sets up the communication company tableviews with the correct columns.
 	 *
@@ -756,6 +781,17 @@ public abstract class AbstractGUIController implements Initializable {
 	 * @param listOfItems the list of items to add to the tableview
 	 */
 	public void addVictimsToTableView(TableView<CtVictim> tblvw, ArrayList<CtVictim> listOfItems){
+		tblvw.getItems().clear();
+		tblvw.getItems().addAll(listOfItems);
+	}
+	
+	/**
+	 * Adds the provided list of Injuries to the tableview.
+	 *
+	 * @param tblvw The tableview to add the data to
+	 * @param listOfItems the list of items to add to the tableview
+	 */
+	public void addInjuriesToTableView(TableView<CtInjury> tblvw, ArrayList<CtInjury> listOfItems){
 		tblvw.getItems().clear();
 		tblvw.getItems().addAll(listOfItems);
 	}
