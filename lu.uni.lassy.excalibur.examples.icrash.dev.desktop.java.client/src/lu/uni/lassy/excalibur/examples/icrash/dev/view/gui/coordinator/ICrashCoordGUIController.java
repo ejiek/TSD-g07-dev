@@ -19,8 +19,11 @@ import java.util.ResourceBundle;
 
 import javafx.util.Callback;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.CoordinatorController;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.InjuryController;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.VictimController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectActorException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.NullValueException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
@@ -28,6 +31,8 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPro
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -148,6 +153,52 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     @FXML
     private Button bttnCoordLogoff;
 
+    /** The tablview that shows the user the victims of crises they have selected. */
+    @FXML
+    private TableView<CtVictim> tblvwVictims;
+    
+    /** The tablview that shows the user the injuries of victim they have selected. */
+    @FXML
+    private TableView<CtInjury> tblvwInjuries;
+    
+    @FXML
+    private Button bttnShowVictims;
+    @FXML
+    private Button bttnAddVictim;
+    @FXML
+    private Button bttnDeleteVictim;
+    
+    @FXML
+    private Button bttnShowInjuries;
+    @FXML
+    private Button bttnAddInjury;
+    @FXML
+    private Button bttnDeleteInjury;
+    @FXML
+    void bttnShowVictimsForCrisis_OnClick(ActionEvent event) {
+    	showCrisisVictims();
+    }
+    @FXML
+    void bttnAddVictimForCrisis_OnClick(ActionEvent event) {
+
+    }
+    @FXML
+    void bttnDeleteVictimForCrisis_OnClick(ActionEvent event) {
+
+    }
+    @FXML
+    void bttnShowInjuriesForVictim_OnClick(ActionEvent event) {
+    	showVictimInjuries();
+    }
+    @FXML
+    void bttnAddInjuryForVictim_OnClick(ActionEvent event) {
+
+    }
+    @FXML
+    void bttnDeleteInjuryForVictim_OnClick(ActionEvent event) {
+
+    }
+    
     /**
      * Button event that deals with changing the status of a crisis
      *
@@ -251,6 +302,8 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		setUpMessageTables(tblvwCoordMessages);
 		setUpCrisesTables(tblvwCrisis);
 		setUpAlertTables(tblvwAlerts);
+		setUpVictimsTables(tblvwVictims);
+		setUpInjuriesTables(tblvwInjuries);
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
 	}
@@ -263,6 +316,56 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 			userController.oeGetCrisisSet(cmbbxCrisisStatus.getValue());
 		} catch (ServerOfflineException | ServerNotBoundException e) {
 			showServerOffLineMessage(e);
+		}
+	}
+	/**
+	 * Populates the tblvwVictims with a list of victims
+	 */
+	private void populateVictims(){
+		VictimController victimController = new VictimController();
+		try {
+			addVictimsToTableView(tblvwVictims, victimController.getAllVictims());
+		} catch (ServerOfflineException | ServerNotBoundException e) {
+			showExceptionErrorMessage(e);
+		} catch (NullPointerException e){
+			Log4JUtils.getInstance().getLogger().error(e);
+			showExceptionErrorMessage(new NullValueException(this.getClass()));
+		}
+	}
+	
+	/**
+	 * Runs the function that will allow the current user to show victims of the selected crisis.
+	 */
+	private void showCrisisVictims(){
+		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
+		VictimController victimController = new VictimController();
+		if (crisis != null){
+			try {
+				addVictimsToTableView(tblvwVictims, victimController.getCrisisVictims(crisis.id));
+			} catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			} catch (NullPointerException e){
+				Log4JUtils.getInstance().getLogger().error(e);
+				showExceptionErrorMessage(new NullValueException(this.getClass()));
+			}
+		}
+	}
+	
+	/**
+	 * Runs the function that will allow the current user to show injuries of the selected victim.
+	 */
+	private void showVictimInjuries(){
+		CtVictim victim = (CtVictim)getObjectFromTableView(tblvwVictims);
+		InjuryController injuryController = new InjuryController();
+		if (victim != null){
+			try {
+				addInjuriesToTableView(tblvwInjuries, injuryController.getVictimInjuries(victim.id));
+			} catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			} catch (NullPointerException e){
+				Log4JUtils.getInstance().getLogger().error(e);
+				showExceptionErrorMessage(new NullValueException(this.getClass()));
+			}
 		}
 	}
 	

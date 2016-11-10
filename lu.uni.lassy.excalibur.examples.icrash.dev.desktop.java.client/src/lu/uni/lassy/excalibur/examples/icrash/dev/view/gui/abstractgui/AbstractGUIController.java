@@ -531,6 +531,8 @@ public abstract class AbstractGUIController implements Initializable {
 		setColumnsSameWidth(tblvw);
 	}
 	
+	
+	
 	/**
 	 * Sets up the Victim tableviews with the correct columns.
 	 *

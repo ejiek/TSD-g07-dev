@@ -29,8 +29,6 @@
                         <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
                               <Button id="bttnRefresh" fx:id="bttnRefresh" mnemonicParsing="false" onAction="#bttnRefresh_OnClick" text="Refresh" />
-                              <Button id="bttnShowVictims" fx:id="bttnShowVictims" mnemonicParsing="false" onAction="#bttnShowVictimsForCrisis_OnClick" text="Show victims" />
-                              <Button id="bttnShowInjuries" fx:id="bttnShowInjuries" onAction="#bttnShowInjuriesForVictim_OnClick" mnemonicParsing="false" text="Show injuries" />
                               <ComboBox id="cmbbxCrisisStatus" fx:id="cmbbxCrisisStatus" prefWidth="150.0" />
                            </children>
                         </HBox>
@@ -39,7 +37,9 @@
                         <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
                               <TableView id="tblvwVictims" fx:id="tblvwVictims" prefHeight="200.0" prefWidth="200.0" />
+                              <Button id="bttnShowVictims" fx:id="bttnShowVictims" mnemonicParsing="false" onAction="#bttnShowVictimsForCrisis_OnClick" text="Show victims" />
                               <TableView id="tblvwInjuries" fx:id="tblvwInjuries" prefHeight="200.0" prefWidth="200.0" />
+                              <Button id="bttnShowInjuries" fx:id="bttnShowInjuries" mnemonicParsing="false" onAction="#bttnShowInjuriesForVictim_OnClick" text="Show injuries" />
                            </children>
                         </HBox>
                      </bottom>

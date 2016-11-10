@@ -99,11 +99,10 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
     private Button bttnHospitalLogon;
     
     
-    
-    /** The button that allows a user to initiate the logon function. */
     @FXML
     private Button bttnShowVictims;
-    
+    @FXML
+    private Button bttnShowInjuries;
   /** The main bpn that holds tables. */ //_t7
     @FXML
     private BorderPane bpnHospitalCrisis;
@@ -198,6 +197,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 //     */
     @FXML
     void bttnShowVictimsForCrisis_OnClick(ActionEvent event) {
+
     	showCrisisVictims();
     }
 //    /**
@@ -293,10 +293,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 		setUpCrisesTables(tblvwCrisis);
 		setUpVictimsTables(tblvwVictims);
 		setUpInjuriesTables(tblvwInjuries);
-		//setUpAlertTables(tblvwAlerts);
-		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
-		//cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
-
+		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList(EtCrisisStatus.values()));
 	}
 	
 	/**
@@ -366,7 +363,6 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 				showExceptionErrorMessage(new NullValueException(this.getClass()));
 			}
 		}
-		//populateCrisis();
 	}
 	
 	/**
@@ -385,7 +381,6 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 				showExceptionErrorMessage(new NullValueException(this.getClass()));
 			}
 		}
-		//populateCrisis();
 	}
 //	/**
 //	 * Runs the function that will allow the current user to close the selected crisis.
