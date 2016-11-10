@@ -56,7 +56,7 @@ public class InjuryController {
 	}
 	
 	/**
-	 * Returns a list of all Injuries of the crisis.
+	 * Returns a list of all Injuries of the victim.
 	 *
 	 * @return Returns an ArrayList of type CtInjury, which contains all Injuries of the victim
 	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable

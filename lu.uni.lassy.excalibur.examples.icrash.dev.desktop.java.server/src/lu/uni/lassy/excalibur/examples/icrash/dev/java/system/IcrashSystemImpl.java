@@ -42,6 +42,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCoordinators;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCrises;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHospitals;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHumans;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbInjuries;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbVictims;
 //import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.Hospitals;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
@@ -616,7 +617,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			cmpSystemCtCrisis = DbCrises.getSystemCrises();
 			cmpSystemCtHuman = DbHumans.getSystemHumans();
 			cmpSystemCtVictim = DbVictims.getSystemVictims();
-			
+			cmpSystemCtInjury = DbInjuries.getSystemInjuries();
+
 			Hashtable<String, CtCoordinator> cmpSystemCtCoordinator = DbCoordinators.getSystemCoordinators();
 			for(CtCoordinator ctCoord: cmpSystemCtCoordinator.values()){
 				cmpSystemCtAuthenticated.put(ctCoord.login.value.getValue(), ctCoord);
@@ -1485,9 +1487,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return result;
 	}
 	
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
-	 */
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
+//	 */
 	public ArrayList <CtVictim> getCrisisCtVictims(DtCrisisID aCrisis_id) throws java.rmi.RemoteException{
 		ArrayList<CtVictim> result = new ArrayList<CtVictim>();
 		if (cmpSystemCtVictim != null){
@@ -1500,9 +1502,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return result;
 	}
 	
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
-	 */
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#getAllCtHumans()
+//	 */
 	public ArrayList <CtInjury> getVictimCtInjuries(DtVictimID aVictim_id) throws java.rmi.RemoteException{
 		ArrayList<CtInjury> result = new ArrayList<CtInjury>();
 		if (cmpSystemCtInjury != null){

@@ -514,7 +514,6 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!INI_COORD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		setUpTables();
 		cmbbxAlertStatus.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

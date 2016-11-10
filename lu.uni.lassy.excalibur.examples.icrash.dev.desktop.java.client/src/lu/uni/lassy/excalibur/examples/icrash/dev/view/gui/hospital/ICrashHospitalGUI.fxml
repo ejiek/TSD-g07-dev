@@ -30,6 +30,7 @@
                            <children>
                               <Button id="bttnRefresh" fx:id="bttnRefresh" mnemonicParsing="false" onAction="#bttnRefresh_OnClick" text="Refresh" />
                               <Button id="bttnShowVictims" fx:id="bttnShowVictims" mnemonicParsing="false" onAction="#bttnShowVictimsForCrisis_OnClick" text="Show victims" />
+                              <Button id="bttnShowInjuries" fx:id="bttnShowInjuries" onAction="#bttnShowInjuriesForVictim_OnClick" mnemonicParsing="false" text="Show injuries" />
                               <ComboBox id="cmbbxCrisisStatus" fx:id="cmbbxCrisisStatus" prefWidth="150.0" />
                            </children>
                         </HBox>

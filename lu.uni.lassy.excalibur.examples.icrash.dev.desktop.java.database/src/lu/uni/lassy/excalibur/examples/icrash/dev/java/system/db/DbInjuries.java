@@ -35,7 +35,7 @@ public class DbInjuries extends DbAbstract{
 	 * Insert Injury into the database.
 	 *
 	 * @param aCtInjury The CtInjury of which to use the information to insert into the database
-	 * @param comCompany The victims that is associated with the injury
+	 * @param aCtVictim The victim that is associated with the injury
 	 */
 	static public void insertInjury(CtInjury aCtInjury, CtVictim aCtVictim){
 	
@@ -164,7 +164,7 @@ public class DbInjuries extends DbAbstract{
 					//injury's id
 					DtInjuryID aId = new DtInjuryID(new PtString(res.getString("id")));
 					DtVictimID aVictimId = new DtVictimID(new PtString(res.getString("victim_id")));
-					String theKind = res.getString("kind");
+					String theKind = res.getString("body_part");
 					EtInjuryKind aKind = null;
 					if(theKind.equals(EtInjuryKind.arm.name()))
 						aKind = EtInjuryKind.arm;

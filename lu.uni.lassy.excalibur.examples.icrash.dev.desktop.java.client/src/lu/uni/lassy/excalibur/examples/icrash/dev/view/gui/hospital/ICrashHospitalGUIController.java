@@ -98,13 +98,11 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
     @FXML
     private Button bttnHospitalLogon;
     
+    
+    
     /** The button that allows a user to initiate the logon function. */
     @FXML
     private Button bttnShowVictims;
-
-//    /** The main tabpane that holds the normal user controls. */
-//    @FXML
-//    private TabPane tbpnMain;
     
   /** The main bpn that holds tables. */ //_t7
     @FXML
@@ -193,16 +191,24 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 //    	closeCrisis();
 //    }
 
-    /**
-     * Table event that deals with choosing the crisis
-     *
-     * @param event The event type fired, we do not need it's details
-     */
+//    /**
+//     * Table event that deals with choosing the crisis
+//     *
+//     * @param event The event type fired, we do not need it's details
+//     */
     @FXML
     void bttnShowVictimsForCrisis_OnClick(ActionEvent event) {
     	showCrisisVictims();
     }
-    
+//    /**
+//     * Table event that deals with choosing the crisis
+//     *
+//     * @param event The event type fired, we do not need it's details
+//     */
+    @FXML
+    void bttnShowInjuriesForVictim_OnClick(ActionEvent event) {
+    	showVictimInjuries();
+    }
     /**
      * Button event that deals with logging off the user
      *
@@ -363,6 +369,24 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 		//populateCrisis();
 	}
 	
+	/**
+	 * Runs the function that will allow the current user to show injuries of the selected victim.
+	 */
+	private void showVictimInjuries(){
+		CtVictim victim = (CtVictim)getObjectFromTableView(tblvwVictims);
+		InjuryController injuryController = new InjuryController();
+		if (victim != null){
+			try {
+				addInjuriesToTableView(tblvwInjuries, injuryController.getVictimInjuries(victim.id));
+			} catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			} catch (NullPointerException e){
+				Log4JUtils.getInstance().getLogger().error(e);
+				showExceptionErrorMessage(new NullValueException(this.getClass()));
+			}
+		}
+		//populateCrisis();
+	}
 //	/**
 //	 * Runs the function that will allow the current user to close the selected crisis.
 //	 */
@@ -620,6 +644,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
     void bttnRefresh_OnClick(ActionEvent event) {
     	populateCrisis();
     	populateVictims();
+    	populateInjuries();
     }
 
 	@Override

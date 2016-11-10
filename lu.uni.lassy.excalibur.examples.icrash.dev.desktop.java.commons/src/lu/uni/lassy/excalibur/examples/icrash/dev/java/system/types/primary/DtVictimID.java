@@ -34,6 +34,11 @@ public class DtVictimID extends DtString implements JIntIs {
 		super(s);
 	}
 	
+	public boolean equals(DtVictimID rightID){
+		if (this.toString().equals(rightID.toString())) return true;
+		return false;
+	}
+	
 	/** The minimum length the Victim ID cannot be. */
 	private int _minLength = 0;
 	
