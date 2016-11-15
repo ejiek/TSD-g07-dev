@@ -143,4 +143,6 @@ public interface ActProxyCoordinator extends ActProxyAuthenticated {
 	 */
 	public PtBoolean ieSendAnAlert(CtAlert aCtAlert) throws RemoteException;
 
+	public PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException, NotBoundException;
+
 }

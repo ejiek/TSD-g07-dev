@@ -23,19 +23,28 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.controller.InjuryController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.VictimController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectActorException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.InvalidHumanKindException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.NullValueException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.StringToNumberException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAuthenticated.UserType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.actors.ActProxyCoordinatorImpl;
@@ -44,6 +53,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -112,6 +122,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     /** The combobox that allows a user to select which alert status type to view. */
     @FXML
     private ComboBox<EtAlertStatus> cmbbxAlertStatus;
+    
+    /** The combobox that allows a user to select which kind of injury has wictim. */
+    @FXML
+    private ComboBox<EtInjuryKind> cmbbxInjuryKind;
 
     /** The tableview of the alerts the user has retrieved from the system. */
     @FXML
@@ -180,7 +194,7 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     }
     @FXML
     void bttnAddVictimForCrisis_OnClick(ActionEvent event) {
-
+    	victimAdd();
     }
     @FXML
     void bttnDeleteVictimForCrisis_OnClick(ActionEvent event) {
@@ -188,7 +202,7 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     }
     @FXML
     void bttnShowInjuriesForVictim_OnClick(ActionEvent event) {
-    	showVictimInjuries();
+    	//showVictimInjuries();
     }
     @FXML
     void bttnAddInjuryForVictim_OnClick(ActionEvent event) {
@@ -306,6 +320,7 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		setUpInjuriesTables(tblvwInjuries);
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
+		cmbbxInjuryKind.setItems( FXCollections.observableArrayList( EtInjuryKind.values()));
 	}
 	
 	/**
@@ -351,24 +366,19 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		}
 	}
 	
-	/**
-	 * Runs the function that will allow the current user to show injuries of the selected victim.
-	 */
-	private void showVictimInjuries(){
-		CtVictim victim = (CtVictim)getObjectFromTableView(tblvwVictims);
-		InjuryController injuryController = new InjuryController();
-		if (victim != null){
-			try {
-				addInjuriesToTableView(tblvwInjuries, injuryController.getVictimInjuries(victim.id));
-			} catch (ServerOfflineException | ServerNotBoundException e) {
-				showExceptionErrorMessage(e);
-			} catch (NullPointerException e){
-				Log4JUtils.getInstance().getLogger().error(e);
-				showExceptionErrorMessage(new NullValueException(this.getClass()));
-			}
-		}
-	}
 	
+//	/**
+//	 * Shows the modify coordinator screen.
+//	 *
+//	 * @param type The type of edit to be done, this could be add or delete
+//	 */
+	private void victimAdd(){
+		DtCrisisID aDtCrisisID = ((CtCrisis)getObjectFromTableView(tblvwCrisis)).id;
+
+		System.out.println("azazazazazas!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+aDtCrisisID.toString());
+    	checkVictimAndSend(aDtCrisisID);
+	}
+
 	/**
 	 * Populates the tableview with a list of alerts that have the same status as the one provided.
 	 */
@@ -593,6 +603,7 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		if (loggedOn){
 			tbpnMain.getSelectionModel().selectFirst();
 			cmbbxAlertStatus.setValue(EtAlertStatus.pending);
+			cmbbxInjuryKind.setValue(EtInjuryKind.arm);
 			cmbbxCrisisStatus.setValue(EtCrisisStatus.pending);
 		}
 		else{
@@ -690,5 +701,34 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 			return new PtBoolean(false);
 		}
 		return new PtBoolean(true);
+	}
+	
+//	/**
+//	 * Checks the data is OK and if so will send it.
+//	 *
+//	 * @param hour The hour on the clock when the accident happened
+//	 * @param minute The minute on the clock when the accident happened
+//	 * @param second The second on the clock when the accident happened
+//	 * @param year The year of the accident
+//	 * @param month The month of the accident
+//	 * @param day The day of the month of the accident
+//	 * @param humanKind The type of human reporting the accident
+//	 * @param phoneNumber The phone number of the human who is reporting the accident
+//	 * @param latitude The latitude of the accident
+//	 * @param longitude The longitude of the accident
+//	 * @param comment The message sent by the human about the accident
+//	 * @return The success of the method
+//	 */
+	public PtBoolean checkVictimAndSend(DtCrisisID aCrisisId){
+		try {
+			return userController.oeVictim(aCrisisId);
+		} catch (ServerOfflineException | ServerNotBoundException e) {
+			showExceptionErrorMessage(e);
+		} catch (IncorrectFormatException e) {
+			showWarningIncorrectInformationEntered(e);
+		} catch (StringToNumberException e){
+			showWarningIncorrectData(e.getMessage());
+		}
+		return new PtBoolean(false);
 	}
 }

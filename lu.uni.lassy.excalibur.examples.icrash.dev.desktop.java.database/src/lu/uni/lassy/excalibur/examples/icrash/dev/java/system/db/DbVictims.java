@@ -55,7 +55,7 @@ public class DbVictims extends DbAbstract {
 	 * @param aCtVictim The Victim to insert into the database
 	 * @param aCtCrisis The related Crisis
 	 */
-	static public void insertVictim(CtVictim aCtVictim, CtCrisis aCtCrisis) {
+	static public void insertVictim(CtVictim aCtVictim, DtCrisisID aDtCrisis) {
 
 		try {
 			conn = DriverManager
@@ -69,7 +69,7 @@ public class DbVictims extends DbAbstract {
 				Statement st = conn.createStatement();
 
 				String id = aCtVictim.id.value.getValue();
-				String crisis_id = aCtCrisis.id.value.getValue();
+				String crisis_id = aDtCrisis.value.getValue();
 				
 				log.debug("[DATABASE]-Insert victim");
 				int val = st.executeUpdate("INSERT INTO " + dbName + ".victims"
@@ -142,47 +142,47 @@ public class DbVictims extends DbAbstract {
 
 	}
 
-//	/**
-//	 * Gets the current highest number used for an alert ID in the database.
-//	 *
-//	 * @return the highest number for a crisis id
-//	 */
-//	static public int getMaxCrisisID() {
-//
-//		int maxCrisisId = 0;
-//
-//		try {
-//			conn = DriverManager
-//					.getConnection(url + dbName, userName, password);
-//			log.debug("Connected to the database");
-//
-//			/********************/
-//			//Select
-//
-//			try {
-//				String sql = "SELECT MAX(CAST(id AS UNSIGNED)) FROM " + dbName
-//						+ ".crises";
-//
-//				PreparedStatement statement = conn.prepareStatement(sql);
-//				ResultSet res = statement.executeQuery(sql);
-//
-//				if (res.next()) {
-//					maxCrisisId = res.getInt(1);
-//				}
-//
-//			} catch (SQLException s) {
-//				log.error("SQL statement is not executed! " + s);
-//			}
-//			conn.close();
-//			log.debug("Disconnected from database");
-//
-//		} catch (Exception e) {
-//			logException(e);
-//		}
-//
-//		return maxCrisisId;
-//
-//	}
+	/**
+	 * Gets the current highest number used for an victim ID in the database.
+	 *
+	 * @return the highest number for a victim id
+	 */
+	static public int getMaxVictimID() {
+
+		int maxVictimId = 0;
+
+		try {
+			conn = DriverManager
+					.getConnection(url + dbName, userName, password);
+			log.debug("Connected to the database");
+
+			/********************/
+			//Select
+
+			try {
+				String sql = "SELECT MAX(CAST(id AS UNSIGNED)) FROM " + dbName
+						+ ".victims";
+
+				PreparedStatement statement = conn.prepareStatement(sql);
+				ResultSet res = statement.executeQuery(sql);
+
+				if (res.next()) {
+					maxVictimId = res.getInt(1);
+				}
+
+			} catch (SQLException s) {
+				log.error("SQL statement is not executed! " + s);
+			}
+			conn.close();
+			log.debug("Disconnected from database");
+
+		} catch (Exception e) {
+			logException(e);
+		}
+
+		return maxVictimId;
+
+	}
 
 	/**
 	 * Gets the associated crises and the victims from the database.

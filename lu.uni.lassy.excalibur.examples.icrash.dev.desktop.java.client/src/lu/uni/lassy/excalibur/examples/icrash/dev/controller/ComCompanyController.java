@@ -116,12 +116,12 @@ public class ComCompanyController implements HasListeners{
 			DtComment aDtComment = new DtComment(new PtString(comment));
 			DtDate aDtDate = new DtDate(new DtYear(new PtInteger(year)), new DtMonth(new PtInteger(month)), new DtDay(new PtInteger(day)));
 			DtTime aDtTime = new DtTime(new DtHour(new PtInteger(hour)), new DtMinute(new PtInteger(minute)), new DtSecond(new PtInteger(second)));
-			Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
-			ht.put(aDtGPSLocation.latitude, Double.toString(aDtGPSLocation.latitude.value.getValue()));
-			ht.put(aDtGPSLocation.longitude, Double.toString(aDtGPSLocation.longitude.value.getValue()));
-			ht.put(aEtHumanKind, aEtHumanKind.name());
-			ht.put(aDtPhoneNumber, aDtPhoneNumber.value.getValue());
-			ht.put(aDtComment, aDtComment.value.getValue());
+//			Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
+//			ht.put(aDtGPSLocation.latitude, Double.toString(aDtGPSLocation.latitude.value.getValue()));
+//			ht.put(aDtGPSLocation.longitude, Double.toString(aDtGPSLocation.longitude.value.getValue()));
+//			ht.put(aEtHumanKind, aEtHumanKind.name());
+//			ht.put(aDtPhoneNumber, aDtPhoneNumber.value.getValue());
+//			ht.put(aDtComment, aDtComment.value.getValue());
 			return aActProxyComCompany.oeAlert(aEtHumanKind, aDtDate, aDtTime, aDtPhoneNumber, aDtGPSLocation, aDtComment);
 		} catch (RemoteException e) {
 			Log4JUtils.getInstance().getLogger().error(e);

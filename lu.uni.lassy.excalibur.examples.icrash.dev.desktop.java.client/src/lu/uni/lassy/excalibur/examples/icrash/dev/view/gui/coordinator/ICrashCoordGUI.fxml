@@ -120,13 +120,18 @@
                                                    </children>
                                                 </VBox>
                                                 <TableView id="tblvwInjuries" fx:id="tblvwInjuries" prefHeight="200.0" prefWidth="200.0" />
-                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                <HBox prefHeight="100.0" prefWidth="200.0">
                                                    <children>
-                                                      <Button id="bttnShowInjuries" fx:id="bttnShowInjuries" mnemonicParsing="false" onAction="#bttnShowInjuriesForVictim_OnClick" text="Show injuries" />
-                                                      <Button id="bttnAddInjury" fx:id="bttnAddInjury" mnemonicParsing="false" onAction="#bttnAddInjuryForVictim_OnClick" text="Add injury" />
-                                                      <Button id="bttnDeleteInjury" fx:id="bttnDeleteInjury" mnemonicParsing="false" onAction="#bttnDeleteInjuryForVictim_OnClick" text="Delete injury" />
+                                                      <VBox prefHeight="200.0" prefWidth="100.0">
+                                                         <children>
+                                                            <Button id="bttnShowInjuries" fx:id="bttnShowInjuries" mnemonicParsing="false" onAction="#bttnShowInjuriesForVictim_OnClick" text="Show injuries" />
+                                                            <Button id="bttnAddInjury" fx:id="bttnAddInjury" mnemonicParsing="false" onAction="#bttnAddInjuryForVictim_OnClick" text="Add injury" />
+                                                            <Button id="bttnDeleteInjury" fx:id="bttnDeleteInjury" mnemonicParsing="false" onAction="#bttnDeleteInjuryForVictim_OnClick" text="Delete injury" />
+                                                         </children>
+                                                      </VBox>
+                                                      <ComboBox id="cmbbxInjuryKind" fx:id="cmbbxInjuryKind" prefWidth="150.0" />
                                                    </children>
-                                                </VBox>
+                                                </HBox>
                                              </children>
                                           </HBox>
                                        </bottom>

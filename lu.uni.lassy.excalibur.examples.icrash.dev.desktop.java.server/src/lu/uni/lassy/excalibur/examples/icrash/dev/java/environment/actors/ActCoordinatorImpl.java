@@ -23,10 +23,17 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.RmiUtils;
@@ -157,6 +164,55 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 		return res;
 	}
 
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany#oeAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
+//	 */
+	synchronized public PtBoolean oeVictim(DtCrisisID aCrisisId)
+			throws RemoteException, NotBoundException {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry
+				.lookup("iCrashServer");
+
+		//set up ComCompany instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActCoordinator.oeVictim sent to system"); ////
+		PtBoolean res = iCrashSys_Server.oeVictim(aCrisisId);
+		
+		if (res.getValue() == true)
+			log.info("operation oeVictim successfully executed by the system");
+
+		return res;
+	}
+	
+	synchronized public PtBoolean oeInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind)
+			throws RemoteException, NotBoundException {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry
+				.lookup("iCrashServer");
+
+		//set up ComCompany instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActCoordinator.oeInjury sent to system"); ////
+		PtBoolean res = iCrashSys_Server.oeInjury(aVictimId, aEtInjuryKind);
+
+		if (res.getValue() == true)
+			log.info("operation oeAlert successfully executed by the system");
+
+		return res;
+	}
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator#oeSetCrisisStatus(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
 	 */

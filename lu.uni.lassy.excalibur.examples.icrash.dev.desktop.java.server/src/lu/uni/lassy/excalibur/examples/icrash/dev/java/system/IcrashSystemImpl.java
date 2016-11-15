@@ -61,6 +61,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
@@ -69,6 +70,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAl
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.secondary.DtSMS;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
@@ -553,10 +555,16 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			DtInteger aNextValueForAlertID = new DtInteger(new PtInteger(
 					nextValueForAlertID));
 			int nextValueForCrisisID = DbCrises.getMaxCrisisID() + 1;
+			int nextValueForVictimID = DbVictims.getMaxVictimID() + 1;
+			int nextValueForInjuryID = DbInjuries.getMaxInjuryID() + 1;
 			DtInteger aNextValueForCrisisID = new DtInteger(new PtInteger(
 					nextValueForCrisisID));
+			DtInteger aNextValueForVictimID = new DtInteger(new PtInteger(
+					nextValueForVictimID));
+			DtInteger aNextValueForInjuryID = new DtInteger(new PtInteger(
+					nextValueForInjuryID));
 			PtBoolean aVpStarted = new PtBoolean(true);
-			ctState.init(aNextValueForAlertID, aNextValueForCrisisID, aClock,
+			ctState.init(aNextValueForAlertID, aNextValueForCrisisID, aNextValueForVictimID, aNextValueForInjuryID, aClock,
 					aCrisisReminderPeriod, aMaxCrisisReminderPeriod, aClock,
 					aVpStarted);
 			/* ENV
@@ -660,6 +668,54 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(true);
 	}
 
+	
+	public  synchronized PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException{
+		try{
+			//PreP1
+			isSystemStarted();
+			System.out.println("1!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			CtVictim aCtVictim = new CtVictim();
+			System.out.println("2!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			//CtState aCtState = new CtState();
+			System.out.println("3!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			System.out.println("before =" + ctState.nextValueForVictimID.value.getValue());
+			int nextValueForVictimID_at_pre = ctState.nextValueForVictimID.value.getValue();
+			System.out.println("before =" + ctState.nextValueForVictimID.value.getValue());
+			//int nextValueForVictimID_at_pre = 8;
+			ctState.nextValueForVictimID.value = new PtInteger(ctState.nextValueForVictimID.value.getValue() + 1);
+			
+			System.out.println("4!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			DtVictimID avId = new DtVictimID(new PtString("" + nextValueForVictimID_at_pre));
+			System.out.println("5!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			aCtVictim.init(avId, aCrisisId);
+			System.out.println("6!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			DbVictims.insertVictim(aCtVictim, aCrisisId);
+			System.out.println("7!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		}
+		catch(Exception e){
+			log.error("Exception in oeVictim..." + e);
+		}
+		return new PtBoolean(false);
+	}
+	
+	public  synchronized PtBoolean oeInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind) throws RemoteException{
+		try{
+			//PreP1
+			isSystemStarted();
+			CtInjury aCtInjury = new CtInjury();
+			CtState aCtState = new CtState();
+			int nextValueForInjuryID_at_pre = aCtState.nextValueForInjuryID.value.getValue();
+			DtInjuryID avId = new DtInjuryID(new PtString("" + nextValueForInjuryID_at_pre));
+			aCtInjury.init(avId, aVictimId, aEtInjuryKind);
+			DbInjuries.insertInjury(aCtInjury, aVictimId);
+		}
+		catch(Exception e){
+			log.error("Exception in oeInjury..." + e);
+		}
+		return new PtBoolean(false);
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
 	 */
@@ -704,6 +760,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	
 			//if there no exits a near alert, then we need to initialise the just created crisis instance
 			if (!existsNear) {
+//				int nextValueForCrisisID_at_pre = ctState.nextValueForCrisisID.value
+//						.getValue();
 				DtCrisisID acId = new DtCrisisID(new PtString(""
 						+ nextValueForCrisisID_at_pre));
 				ctState.nextValueForCrisisID.value = new PtInteger(

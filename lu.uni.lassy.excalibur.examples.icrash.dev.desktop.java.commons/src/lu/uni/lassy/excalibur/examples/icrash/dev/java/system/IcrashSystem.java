@@ -44,6 +44,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAl
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
@@ -238,6 +239,37 @@ public interface IcrashSystem extends Remote {
 	public PtBoolean oeAlert(EtHumanKind aEtHumanKind,DtDate aDtDate,
 				DtTime aDtTime,DtPhoneNumber aDtPhoneNumber,DtGPSLocation aDtGPSLocation,DtComment aDtComment) throws RemoteException; 
 
+	/**
+	 * Creates a Victim in the system using the parameters passed
+	 * Uses the actor coordinator for this method.
+	 *
+//	 * @param aEtHumanKind The kind of human reporting the accident
+//	 * @param aDtDate The date of the accident
+//	 * @param aDtTime The time of the accident
+//	 * @param aDtPhoneNumber The phone number of the human reporting the accident
+//	 * @param aDtGPSLocation The location of the accident
+//	 * @param aDtComment The message sent by the user
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException; 
+	
+	/**
+	 * Creates an Injury in the system using the parameters passed
+	 * Uses the actor coordinator for this method.
+	 *
+//	 * @param aEtHumanKind The kind of human reporting the accident
+//	 * @param aDtDate The date of the accident
+//	 * @param aDtTime The time of the accident
+//	 * @param aDtPhoneNumber The phone number of the human reporting the accident
+//	 * @param aDtGPSLocation The location of the accident
+//	 * @param aDtComment The message sent by the user
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean oeInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind) throws RemoteException; 
+	
+	
 	/**
 	 * Validates an alert on the system
 	 * Uses the coordinator actor to do this function.

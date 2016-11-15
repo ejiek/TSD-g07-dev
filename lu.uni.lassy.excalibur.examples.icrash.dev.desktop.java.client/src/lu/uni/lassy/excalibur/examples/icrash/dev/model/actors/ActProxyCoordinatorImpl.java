@@ -23,9 +23,14 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
@@ -55,6 +60,20 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 	public ActProxyCoordinatorImpl(ActCoordinator user)
 			throws RemoteException, NotBoundException {
 		super(user);
+	}
+
+	
+	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyComCompany#oeAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
+//	 */
+	synchronized public PtBoolean oeVictim(DtCrisisID aCrisisId)
+			throws RemoteException, NotBoundException {
+
+		if (getServerSideActor() != null)
+			return ((ActCoordinator) getServerSideActor()).oeVictim(aCrisisId);
+		else
+			return new PtBoolean(false);
 	}
 
 	/* (non-Javadoc)

@@ -141,4 +141,13 @@ public interface ActCoordinator extends ActAuthenticated {
 	 */
 	public PtBoolean ieSendAnAlert(CtAlert aCtAlert) throws RemoteException;
 
+	
+//	/**
+//	 * A message and alert is received by the user.
+//	 *
+//	 * @param aCtAlert The alert received by the user
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 */
+	public PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException, NotBoundException ;
 }

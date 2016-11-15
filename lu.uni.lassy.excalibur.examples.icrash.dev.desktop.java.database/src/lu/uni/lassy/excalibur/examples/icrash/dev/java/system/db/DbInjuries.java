@@ -37,7 +37,7 @@ public class DbInjuries extends DbAbstract{
 	 * @param aCtInjury The CtInjury of which to use the information to insert into the database
 	 * @param aCtVictim The victim that is associated with the injury
 	 */
-	static public void insertInjury(CtInjury aCtInjury, CtVictim aCtVictim){
+	static public void insertInjury(CtInjury aCtInjury, DtVictimID aDtVictim){
 	
 		try {
 			conn = DriverManager.getConnection(url + dbName, userName, password);
@@ -50,7 +50,7 @@ public class DbInjuries extends DbAbstract{
 				Statement st = conn.createStatement();
 				
 				String id = aCtInjury.id.value.getValue();
-				String victim_id = aCtVictim.id.value.getValue();
+				String victim_id = aDtVictim.value.getValue();
 				String kind = aCtInjury.kind.toString();
 	
 				log.debug("[DATABASE]-Insert injury");
@@ -267,6 +267,48 @@ public class DbInjuries extends DbAbstract{
 		
 		return assCtInjuryCtVictim;
 		
+	}
+	
+	/**
+	 * Gets the current highest number used for an Injury ID in the database.
+	 *
+	 * @return the highest number for an Injury id
+	 */
+	static public int getMaxInjuryID() {
+
+		int maxInjuryId = 0;
+
+		try {
+			conn = DriverManager
+					.getConnection(url + dbName, userName, password);
+			log.debug("Connected to the database");
+
+			/********************/
+			//Select
+
+			try {
+				String sql = "SELECT MAX(CAST(id AS UNSIGNED)) FROM " + dbName
+						+ ".injuries";
+
+				PreparedStatement statement = conn.prepareStatement(sql);
+				ResultSet res = statement.executeQuery(sql);
+
+				if (res.next()) {
+					maxInjuryId = res.getInt(1);
+				}
+
+			} catch (SQLException s) {
+				log.error("SQL statement is not executed! " + s);
+			}
+			conn.close();
+			log.debug("Disconnected from database");
+
+		} catch (Exception e) {
+			logException(e);
+		}
+
+		return maxInjuryId;
+
 	}
 	
 	/**
