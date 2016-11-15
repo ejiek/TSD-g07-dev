@@ -673,24 +673,14 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		try{
 			//PreP1
 			isSystemStarted();
-			System.out.println("1!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			CtVictim aCtVictim = new CtVictim();
-			System.out.println("2!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			//CtState aCtState = new CtState();
-			System.out.println("3!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			System.out.println("before =" + ctState.nextValueForVictimID.value.getValue());
 			int nextValueForVictimID_at_pre = ctState.nextValueForVictimID.value.getValue();
 			System.out.println("before =" + ctState.nextValueForVictimID.value.getValue());
-			//int nextValueForVictimID_at_pre = 8;
 			ctState.nextValueForVictimID.value = new PtInteger(ctState.nextValueForVictimID.value.getValue() + 1);
-			
-			System.out.println("4!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			DtVictimID avId = new DtVictimID(new PtString("" + nextValueForVictimID_at_pre));
-			System.out.println("5!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			aCtVictim.init(avId, aCrisisId);
-			System.out.println("6!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			DbVictims.insertVictim(aCtVictim, aCrisisId);
-			System.out.println("7!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
 		catch(Exception e){
 			log.error("Exception in oeVictim..." + e);
