@@ -16,6 +16,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
@@ -73,6 +74,19 @@ public class ActProxyHospitalImpl extends ActProxyAuthenticatedImpl
 			return new PtBoolean(false);
 	}
 
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
+//	 */
+	synchronized public PtBoolean oeGetVictimSet()
+			throws RemoteException, NotBoundException {
+		if (getServerSideActor() != null){
+			MapOfCtVictims.clear();
+			return ((ActHospital) getServerSideActor()).oeGetVictimSet();
+		}
+		else
+			return new PtBoolean(false);
+	}
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeGetAlertsSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus)
 	 */

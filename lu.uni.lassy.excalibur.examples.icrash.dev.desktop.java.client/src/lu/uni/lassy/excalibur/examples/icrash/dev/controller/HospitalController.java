@@ -19,6 +19,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.Incorrec
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAuthenticated.UserType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIs;
@@ -258,6 +259,31 @@ public class HospitalController extends AbstractUserController {
 			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
 			try {
 				return actHospital.oeGetAlertsSet(aEtAlertStatus);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+	}
+	
+//	/**
+//	 * Gets a list of all crises from the server with the status type of the one provided
+//	 * The list will be sent to the actor directly, via the ie method.
+//	 *
+//	 * @param aEtCrisisStatus The status of the crisis to filter by
+//	 * @return The success of the method
+//	 * @throws ServerOfflineException Thrown if the server is offline
+//	 * @throws ServerNotBoundException Thrown if the server is not bound
+//	 */
+	public PtBoolean oeGetVictimSet() throws ServerOfflineException, ServerNotBoundException{
+		if (this.getUserType() == UserType.Hospital){
+			ActProxyHospital actHospital = (ActProxyHospital)this.getAuth();
+			try {
+				return actHospital.oeGetVictimSet();
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();

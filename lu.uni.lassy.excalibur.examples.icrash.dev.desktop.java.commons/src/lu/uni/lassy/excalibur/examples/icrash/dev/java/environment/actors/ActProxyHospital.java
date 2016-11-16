@@ -43,6 +43,16 @@ public interface ActProxyHospital extends ActProxyAuthenticated {
 	 */
 	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) throws RemoteException, NotBoundException;
 	
+//	/**
+//	 * Requests a crisis to be sent to the coordinator with the same status as the one provided.
+//	 *
+//	 * @param aEtCrisisStatus The crises with this status type will be retrieved
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+//	 */
+	public PtBoolean oeGetVictimSet() throws RemoteException, NotBoundException;
+	
 	/**
 	 * Requests an alert to be sent to the coordinator with the same status as the one provided.
 	 *

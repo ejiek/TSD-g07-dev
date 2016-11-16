@@ -50,7 +50,15 @@ public interface ActHospital extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in the RMI settings
 	 */
 	public PtBoolean oeGetAlertsSet(EtAlertStatus aEtAlertStatus) throws RemoteException, NotBoundException;
-	
+//	/**
+//	 * Requests a crisis to be sent to the coordinator with the same status as the one provided.
+//	 *
+//	 * @param aEtCrisisStatus The crises with this status type will be sent to the requesting actor
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+//	 */
+	public PtBoolean oeGetVictimSet() throws RemoteException, NotBoundException;
 	/**
 	 * Sets the crisis' handler, with the ID passed, as the current user.
 	 *

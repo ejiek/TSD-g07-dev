@@ -245,7 +245,6 @@ public class CoordinatorController extends AbstractUserController {
 		return new PtBoolean(false);
 	}
 	
-	
 //	/**
 //	 * Gets a list of all crises from the server with the status type of the one provided
 //	 * The list will be sent to the actor directly, via the ie method.
@@ -270,6 +269,7 @@ public class CoordinatorController extends AbstractUserController {
 		}
 		return new PtBoolean(false);
 	}
+	
 	/**
 	 * Gets a list of all alerts from the server with the status type of the one provided
 	 * The list will be sent to the actor directly, via the ie method.

@@ -79,6 +79,7 @@ public class ActHospitalImpl extends ActAuthenticatedImpl implements ActHospital
 		return res;
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital#oeSetCrisisHandler(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID)
 	 */
@@ -352,6 +353,33 @@ public class ActHospitalImpl extends ActAuthenticatedImpl implements ActHospital
 		PtBoolean res = iCrashSys_Server.oeGetAlertsSet(aEtAlertStatus);
 		if(res.getValue() == true)
 			log.info("operation oeGetAlertsSet successfully executed by the system");
+		return res;
+	}
+	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
+//	 */
+	synchronized public PtBoolean oeGetVictimSet() throws RemoteException, NotBoundException {
+	
+		Logger log = Log4JUtils.getInstance().getLogger();
+	
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+			 	
+		//Gathering the remote object as it was published into the registry
+	    IcrashSystem iCrashSys_Server = (IcrashSystem)registry.lookup("iCrashServer");
+		
+	
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActHospital.oeGetCrisisSet sent to system");
+		PtBoolean res = iCrashSys_Server.oeGetVictimSet();
+			
+			
+		if(res.getValue() == true)
+			log.info("operation oeGetVictimSet successfully executed by the system");
+
+
 		return res;
 	}
 }

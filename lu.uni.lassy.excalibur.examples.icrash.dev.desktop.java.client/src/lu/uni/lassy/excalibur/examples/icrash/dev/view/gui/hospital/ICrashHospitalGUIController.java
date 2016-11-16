@@ -296,14 +296,10 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 	 * Populates the tblvwVictims with a list of victims
 	 */
 	private void populateVictims(){
-		VictimController victimController = new VictimController();
 		try {
-			addVictimsToTableView(tblvwVictims, victimController.getAllVictims());
+			userController.oeGetVictimSet();
 		} catch (ServerOfflineException | ServerNotBoundException e) {
-			showExceptionErrorMessage(e);
-		} catch (NullPointerException e){
-			Log4JUtils.getInstance().getLogger().error(e);
-			showExceptionErrorMessage(new NullValueException(this.getClass()));
+			showServerOffLineMessage(e);
 		}
 	}
 	
@@ -336,6 +332,7 @@ public class ICrashHospitalGUIController extends AbstractAuthGUIController {
 	 * Runs the function that will allow the current user to show victims of the selected crisis.
 	 */
 	private void showCrisisVictims(){
+    	populateVictims();
 		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
 		VictimController victimController = new VictimController();
 		if (crisis != null){

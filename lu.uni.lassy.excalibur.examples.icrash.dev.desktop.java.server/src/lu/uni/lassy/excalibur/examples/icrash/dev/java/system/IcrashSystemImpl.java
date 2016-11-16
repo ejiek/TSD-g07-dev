@@ -1102,14 +1102,20 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			//PreP2
 			isUserLoggedIn();
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator || currentRequestingAuthenticatedActor instanceof ActHospital) {
-				ActCoordinator aActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
 				//go through all existing crises
 				cmpSystemCtVictim.clear();
 				cmpSystemCtVictim = DbVictims.getSystemVictims();
 				for (String victimKey : cmpSystemCtVictim.keySet()) {
 					System.out.println(victimKey);
 					CtVictim victim = cmpSystemCtVictim.get(victimKey);
-					victim.isSentToCoordinator(aActCoordinator);
+					if (currentRequestingAuthenticatedActor instanceof ActCoordinator){
+						ActCoordinator aActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
+						victim.isSentToCoordinator(aActCoordinator);
+					}
+					else{
+						ActHospital aActHospital = (ActHospital) currentRequestingAuthenticatedActor;
+						victim.isSentToHospital(aActHospital);
+					}
 				}
 				return new PtBoolean(true);
 			}
