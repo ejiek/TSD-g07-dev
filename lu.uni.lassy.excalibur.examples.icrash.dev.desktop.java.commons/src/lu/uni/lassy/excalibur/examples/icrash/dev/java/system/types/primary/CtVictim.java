@@ -13,23 +13,10 @@
 package lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary;
 
 import java.io.Serializable;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
-import org.apache.log4j.Logger;
-
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.IcrashEnvironment;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.RmiUtils;
 
 /**
  * The Class CtCrisis that holds the crisis details.
@@ -92,5 +79,31 @@ public class CtVictim implements Serializable {
 	@Override
 	public int hashCode(){
 		return this.id.value.getValue().length();
+	}
+	
+//	/**
+//	 * Used to provide a given coordinator with current alert information.
+//	 *
+//	 * @param aActCoordinator the actor coordinator to send the information to
+//	 * @return the success of the method
+//	 * @throws RemoteException Thrown if the remote destination is unreachable
+//	 */
+	public PtBoolean isSentToCoordinator(ActCoordinator aActCoordinator) throws RemoteException {
+		
+		aActCoordinator.ieSendAVictim(this);
+		return new PtBoolean(true);
+	}
+	
+//	/**
+//	 * Used to provide a given hospital with current alert information.
+//	 *
+//	 * @param aActHospital the actor hospital to send the information to
+//	 * @return the success of the method
+//	 * @throws RemoteException Thrown if the remote destination is unreachable
+//	 */
+	public PtBoolean isSentToHospital(ActHospital aActHospital) throws RemoteException {
+		
+		aActHospital.ieSendAVictim(this);
+		return new PtBoolean(true);
 	}
 }

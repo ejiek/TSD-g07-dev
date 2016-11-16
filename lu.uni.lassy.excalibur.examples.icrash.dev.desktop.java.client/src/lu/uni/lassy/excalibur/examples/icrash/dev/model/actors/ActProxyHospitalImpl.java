@@ -20,6 +20,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHos
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
@@ -192,8 +193,23 @@ public class ActProxyHospitalImpl extends ActProxyAuthenticatedImpl
 		return new PtBoolean(true);
 	}
 	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
+//	 */
+	public PtBoolean ieSendAVictim(CtVictim aCtVictim) {
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActHospital.ieSendAVictim received from system");
+		log.info("victim id '" + aCtVictim.id.value.getValue().toString() + "'");
+		listOfMessages.add(new Message(MessageType.ieSendAVictim, "Victim " + aCtVictim.id.value.getValue() + " was sent"));
+		this.MapOfCtVictims.put(aCtVictim.id.value.getValue(), aCtVictim);
+		return new PtBoolean(true);
+	}
+	
 	/** The list of class type crises this user has retrieved from the server. */
 	private Hashtable<String, CtCrisis> _listOfCtCrisis = new Hashtable<String, CtCrisis>(); 
+	
+	/** The list of class type victims this user has retrieved from the server. */
+	private Hashtable<String, CtVictim> _listOfCtVictims = new Hashtable<String, CtVictim>(); 
 	
 	/** The list of class type alerts this user has retrieved from the server */
 	private Hashtable<String, CtAlert> _listOfCtAlerts = new Hashtable<String, CtAlert>();
@@ -201,6 +217,10 @@ public class ActProxyHospitalImpl extends ActProxyAuthenticatedImpl
 	/** The observable map of class type crises this user has retrieved from the server. 
 	 * Being observable, listeners can be attached to it to force the an action once updated*/
 	public ObservableMap<String, CtCrisis> MapOfCtCrisis = FXCollections.observableMap(_listOfCtCrisis);
+	
+//	/** The observable map of class type crises this user has retrieved from the server. 
+//	 * Being observable, listeners can be attached to it to force the an action once updated*/
+	public ObservableMap<String, CtVictim> MapOfCtVictims = FXCollections.observableMap(_listOfCtVictims);
 	
 	/** The observable map of class type alerts this user has retrieved from the server. 
 	 * Being observable, listeners can be attached to it to force the an action once updated*/

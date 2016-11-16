@@ -16,7 +16,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
-import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.InvalidHumanKindException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.StringToNumberException;
@@ -27,24 +26,9 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntI
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLatitude;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLongitude;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDay;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtHour;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtMinute;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtMonth;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtSecond;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtYear;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtInteger;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtReal;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.actors.ActProxyCoordinatorImpl;
@@ -260,6 +244,31 @@ public class CoordinatorController extends AbstractUserController {
 		return new PtBoolean(false);
 	}
 	
+	
+//	/**
+//	 * Gets a list of all crises from the server with the status type of the one provided
+//	 * The list will be sent to the actor directly, via the ie method.
+//	 *
+//	 * @param aEtCrisisStatus The status of the crisis to filter by
+//	 * @return The success of the method
+//	 * @throws ServerOfflineException Thrown if the server is offline
+//	 * @throws ServerNotBoundException Thrown if the server is not bound
+//	 */
+	public PtBoolean oeGetVictimSet() throws ServerOfflineException, ServerNotBoundException{
+		if (this.getUserType() == UserType.Coordinator){
+			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+			try {
+				return actCoord.oeGetVictimSet();
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+	}
 	/**
 	 * Gets a list of all alerts from the server with the status type of the one provided
 	 * The list will be sent to the actor directly, via the ie method.

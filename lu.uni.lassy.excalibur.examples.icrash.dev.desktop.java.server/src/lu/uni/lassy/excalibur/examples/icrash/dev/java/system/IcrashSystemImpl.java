@@ -123,7 +123,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
 	Hashtable<String, CtHuman> cmpSystemCtHuman = new Hashtable<String, CtHuman>();
 	
-	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
+	/**  A hashtable of the victims in the system, stored by their crisis id as a key. */
 	Hashtable<String, CtVictim> cmpSystemCtVictim = new Hashtable<String, CtVictim>();
 	
 	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
@@ -1094,6 +1094,34 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
+//	 */
+	public PtBoolean oeGetVictimSet() {
+		try{
+			//PreP1
+			isSystemStarted();
+			//PreP2
+			isUserLoggedIn();
+			if (currentRequestingAuthenticatedActor instanceof ActCoordinator || currentRequestingAuthenticatedActor instanceof ActHospital) {
+				ActCoordinator aActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
+				//go through all existing crises
+				cmpSystemCtVictim.clear();
+				cmpSystemCtVictim = DbVictims.getSystemVictims();
+				for (String victimKey : cmpSystemCtVictim.keySet()) {
+					System.out.println(victimKey);
+					CtVictim victim = cmpSystemCtVictim.get(victimKey);
+					victim.isSentToCoordinator(aActCoordinator);
+				}
+				return new PtBoolean(true);
+			}
+		}
+		catch (Exception e){
+			log.error("Exception in oeGetVictimSet..." + e);
+		}
+		return new PtBoolean(false);
+	}
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeGetAlertsSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus)
 	 */

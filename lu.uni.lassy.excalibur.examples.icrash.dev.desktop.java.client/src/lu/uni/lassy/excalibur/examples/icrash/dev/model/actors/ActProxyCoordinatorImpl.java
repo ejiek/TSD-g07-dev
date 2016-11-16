@@ -20,17 +20,13 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
@@ -83,8 +79,20 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 			throws RemoteException, NotBoundException {
 		if (getServerSideActor() != null){
 			MapOfCtCrisis.clear();
-			return ((ActCoordinator) getServerSideActor())
-					.oeGetCrisisSet(aEtCrisisStatus);
+			return ((ActCoordinator) getServerSideActor()).oeGetCrisisSet(aEtCrisisStatus);
+		}
+		else
+			return new PtBoolean(false);
+	}
+	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
+//	 */
+	synchronized public PtBoolean oeGetVictimSet()
+			throws RemoteException, NotBoundException {
+		if (getServerSideActor() != null){
+			MapOfCtVictims.clear();
+			return ((ActCoordinator) getServerSideActor()).oeGetVictimSet();
 		}
 		else
 			return new PtBoolean(false);
@@ -210,11 +218,30 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 		return new PtBoolean(true);
 	}
 	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
+//	 */
+	public PtBoolean ieSendAVictim(CtVictim aCtVictim) {
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActCoordinator.ieSendAVictim received from system");
+		log.info("victim id '" + aCtVictim.id.value.getValue().toString() + "'");
+		listOfMessages.add(new Message(MessageType.ieSendAVictim, "Victim " + aCtVictim.id.value.getValue() + " was sent"));
+		this.MapOfCtVictims.put(aCtVictim.id.value.getValue(), aCtVictim);
+		return new PtBoolean(true);
+	}
+	
 	/** The list of class type crises this user has retrieved from the server. */
 	private Hashtable<String, CtCrisis> _listOfCtCrisis = new Hashtable<String, CtCrisis>(); 
 	
+	/** The list of class type victims this user has retrieved from the server. */
+	private Hashtable<String, CtVictim> _listOfCtVictims = new Hashtable<String, CtVictim>(); 
+	
 	/** The list of class type alerts this user has retrieved from the server */
 	private Hashtable<String, CtAlert> _listOfCtAlerts = new Hashtable<String, CtAlert>();
+	
+//	/** The observable map of class type crises this user has retrieved from the server. 
+//	 * Being observable, listeners can be attached to it to force the an action once updated*/
+	public ObservableMap<String, CtVictim> MapOfCtVictims = FXCollections.observableMap(_listOfCtVictims);
 	
 	/** The observable map of class type crises this user has retrieved from the server. 
 	 * Being observable, listeners can be attached to it to force the an action once updated*/

@@ -17,6 +17,7 @@ import java.rmi.RemoteException;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
@@ -40,6 +41,15 @@ public interface ActCoordinator extends ActAuthenticated {
 	 */
 	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) throws RemoteException, NotBoundException;
 	
+//	/**
+//	 * Requests a crisis to be sent to the coordinator with the same status as the one provided.
+//	 *
+//	 * @param aEtCrisisStatus The crises with this status type will be sent to the requesting actor
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+//	 */
+	public PtBoolean oeGetVictimSet() throws RemoteException, NotBoundException;
 	/**
 	 * Requests an alert to be sent to the coordinator with the same status as the one provided.
 	 *
@@ -131,6 +141,15 @@ public interface ActCoordinator extends ActAuthenticated {
 	 * @throws RemoteException Thrown if the server is offline
 	 */
 	public PtBoolean ieSendACrisis(CtCrisis aCtCrisis) throws RemoteException;
+	
+//	/**
+//	 * A message and crisis is received by the user.
+//	 *
+//	 * @param aCtCrisis The crisis received by the user
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 */
+	public PtBoolean ieSendAVictim(CtVictim aCtVictim) throws RemoteException;
 	
 	/**
 	 * A message and alert is received by the user.

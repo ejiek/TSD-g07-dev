@@ -19,11 +19,9 @@ import java.util.ResourceBundle;
 
 import javafx.util.Callback;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.CoordinatorController;
-import lu.uni.lassy.excalibur.examples.icrash.dev.controller.InjuryController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.VictimController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectActorException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
-import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.InvalidHumanKindException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.NullValueException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
@@ -34,17 +32,12 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntI
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.actors.ActProxyCoordinatorImpl;
@@ -53,7 +46,6 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -190,6 +182,7 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     private Button bttnDeleteInjury;
     @FXML
     void bttnShowVictimsForCrisis_OnClick(ActionEvent event) {
+    	populateVictims();
     	showCrisisVictims();
     }
     @FXML
@@ -333,39 +326,17 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 			showServerOffLineMessage(e);
 		}
 	}
+	
 	/**
-	 * Populates the tblvwVictims with a list of victims
+	 * Populates the tableview with a list of victims.
 	 */
 	private void populateVictims(){
-		VictimController victimController = new VictimController();
 		try {
-			addVictimsToTableView(tblvwVictims, victimController.getAllVictims());
+			userController.oeGetVictimSet();
 		} catch (ServerOfflineException | ServerNotBoundException e) {
-			showExceptionErrorMessage(e);
-		} catch (NullPointerException e){
-			Log4JUtils.getInstance().getLogger().error(e);
-			showExceptionErrorMessage(new NullValueException(this.getClass()));
+			showServerOffLineMessage(e);
 		}
 	}
-	
-	/**
-	 * Runs the function that will allow the current user to show victims of the selected crisis.
-	 */
-	private void showCrisisVictims(){
-		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
-		VictimController victimController = new VictimController();
-		if (crisis != null){
-			try {
-				addVictimsToTableView(tblvwVictims, victimController.getCrisisVictims(crisis.id));
-			} catch (ServerOfflineException | ServerNotBoundException e) {
-				showExceptionErrorMessage(e);
-			} catch (NullPointerException e){
-				Log4JUtils.getInstance().getLogger().error(e);
-				showExceptionErrorMessage(new NullValueException(this.getClass()));
-			}
-		}
-	}
-	
 	
 //	/**
 //	 * Shows the modify coordinator screen.
@@ -374,8 +345,6 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 //	 */
 	private void victimAdd(){
 		DtCrisisID aDtCrisisID = ((CtCrisis)getObjectFromTableView(tblvwCrisis)).id;
-
-		System.out.println("azazazazazas!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+aDtCrisisID.toString());
     	checkVictimAndSend(aDtCrisisID);
 	}
 
@@ -473,6 +442,24 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 			}
 		}
 		populateCrisis();
+	}
+	
+	/**
+	 * Runs the function that will allow the current user to show victims of the selected crisis.
+	 */
+	private void showCrisisVictims(){
+		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
+		VictimController victimController = new VictimController();
+		if (crisis != null){
+			try {
+				addVictimsToTableView(tblvwVictims, victimController.getCrisisVictims(crisis.id));
+			} catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			} catch (NullPointerException e){
+				Log4JUtils.getInstance().getLogger().error(e);
+				showExceptionErrorMessage(new NullValueException(this.getClass()));
+			}
+		}
 	}
 	
 	/**

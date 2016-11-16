@@ -13,23 +13,9 @@
 package lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary;
 
 import java.io.Serializable;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
-import org.apache.log4j.Logger;
-
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.IcrashEnvironment;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.RmiUtils;
+
 
 /**
  * The Class CtCrisis that holds the crisis details.

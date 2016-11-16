@@ -14,7 +14,6 @@ package lu.uni.lassy.excalibur.examples.icrash.dev.controller;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Hashtable;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.InvalidHumanKindException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
@@ -22,7 +21,6 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOf
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.StringToNumberException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyComCompany;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIs;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLatitude;

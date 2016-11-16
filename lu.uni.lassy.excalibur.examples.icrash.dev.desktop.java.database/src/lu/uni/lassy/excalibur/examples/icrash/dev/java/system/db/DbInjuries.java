@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;

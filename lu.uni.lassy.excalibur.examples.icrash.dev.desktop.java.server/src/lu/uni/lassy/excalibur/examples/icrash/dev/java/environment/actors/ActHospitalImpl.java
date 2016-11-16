@@ -20,6 +20,7 @@ import java.rmi.registry.Registry;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
@@ -284,6 +285,27 @@ public class ActHospitalImpl extends ActAuthenticatedImpl implements ActHospital
 			try {
 				if (aProxy instanceof ActProxyHospital)
 					((ActProxyHospital)aProxy).ieSendACrisis(aCtCrisis);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+			}
+
+		return new PtBoolean(true);
+	}
+	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
+//	 */
+	public PtBoolean ieSendAVictim(CtVictim aCtVictim) {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		log.info("message ActHospital.ieSendAVictim received from system");
+		log.info("victim id '"	+ aCtVictim.id.value.getValue().toString() +"'");
+		
+		for(ActProxyAuthenticated aProxy : listeners)
+			try {
+				if (aProxy instanceof ActProxyHospital)
+					((ActProxyHospital)aProxy).ieSendAVictim(aCtVictim);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 			}
