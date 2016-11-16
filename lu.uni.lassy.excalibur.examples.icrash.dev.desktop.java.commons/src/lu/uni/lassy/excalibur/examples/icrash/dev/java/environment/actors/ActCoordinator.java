@@ -21,6 +21,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVi
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -168,5 +169,14 @@ public interface ActCoordinator extends ActAuthenticated {
 //	 * @return The success of the method
 //	 * @throws RemoteException Thrown if the server is offline
 //	 */
-	public PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException, NotBoundException ;
+	public PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException, NotBoundException ;
+	
+//	/**
+//	 * A message and alert is received by the user.
+//	 *
+//	 * @param aCtAlert The alert received by the user
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 */
+	public PtBoolean oeDeleteVictim(DtVictimID aVictimId) throws RemoteException, NotBoundException ;
 }

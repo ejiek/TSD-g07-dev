@@ -252,7 +252,23 @@ public interface IcrashSystem extends Remote {
 //	 * @return The success of the method
 //	 * @throws RemoteException Thrown if the server is offline
 	 */
-	public PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException; 
+	public PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException; 
+	
+	
+//	/**
+//	 * Creates a Victim in the system using the parameters passed
+//	 * Uses the actor coordinator for this method.
+//	 *
+//	 * @param aEtHumanKind The kind of human reporting the accident
+//	 * @param aDtDate The date of the accident
+//	 * @param aDtTime The time of the accident
+//	 * @param aDtPhoneNumber The phone number of the human reporting the accident
+//	 * @param aDtGPSLocation The location of the accident
+//	 * @param aDtComment The message sent by the user
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 */
+	public PtBoolean oeDeleteVictim(DtVictimID aVictimId) throws RemoteException; 
 	
 	/**
 	 * Creates an Injury in the system using the parameters passed

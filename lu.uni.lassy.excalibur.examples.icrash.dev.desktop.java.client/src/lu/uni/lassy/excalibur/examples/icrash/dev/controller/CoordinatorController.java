@@ -26,6 +26,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntI
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -315,12 +316,51 @@ public class CoordinatorController extends AbstractUserController {
 //	 * @throws IncorrectFormatException is thrown when a Dt/Et information type does not match the is() method specified in the specification
 //	 * @throws StringToNumberException the string to number exception
 //	 */
-	public PtBoolean oeVictim(DtCrisisID aCrisisId) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException, StringToNumberException{
+	public PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException, StringToNumberException{
 		
 		if (this.getUserType() == UserType.Coordinator){
 			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
 			try {
-				return actCoord.oeVictim(aCrisisId);
+				return actCoord.oeCreateVictim(aCrisisId);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+		
+	}
+	
+//	/**
+//	 * Checks the data passed is correct and if so, will create an alert in the system.
+//	 *
+//	 * @param aEtHumanKind the a et human kind
+//	 * @param year is the year that the accident took place
+//	 * @param month is the month that the accident took place
+//	 * @param day is the day of the month that the accident took place
+//	 * @param hour is the hour of the clock at the time that the accident took place
+//	 * @param minute is the minute of the clock at the time that the accident took place
+//	 * @param second is the second of the clock at the time that the accident took place
+//	 * @param phoneNumber is the contact phone number of the person reporting the accident to the iCrashSystem.
+//	 * @param latitude is the latitude point of where the accident happened
+//	 * @param longitude is the longitude point of where the accident happened
+//	 * @param comment is the
+//	 * @return Returns a PtBoolean of true if done successfully, otherwise will return a false
+//	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+//	 * @throws InvalidHumanKindException is thrown when the enum type of HumanKind does not match the specification
+//	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+//	 * @throws IncorrectFormatException is thrown when a Dt/Et information type does not match the is() method specified in the specification
+//	 * @throws StringToNumberException the string to number exception
+//	 */
+	public PtBoolean oeDeleteVictim(DtVictimID aVictimId) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException, StringToNumberException{
+		
+		if (this.getUserType() == UserType.Coordinator){
+			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+			try {
+				return actCoord.oeDeleteVictim(aVictimId);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();

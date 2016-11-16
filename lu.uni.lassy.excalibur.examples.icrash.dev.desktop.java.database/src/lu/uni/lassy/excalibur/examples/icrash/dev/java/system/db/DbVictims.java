@@ -317,7 +317,6 @@ public class DbVictims extends DbAbstract {
 
 			/********************/
 			//Select
-			System.out.println("beforeSelect!!!!!!!!!!!!!!");
 			try {
 				String sql = "SELECT * FROM " + dbName + ".victims ";
 
@@ -327,7 +326,6 @@ public class DbVictims extends DbAbstract {
 				CtVictim aCtVictim = null;
 
 				while (res.next()) {
-					System.out.println("HER!!!!!!!!!!!!!!");
 					aCtVictim = new CtVictim();
 					//crisis' id
 					DtVictimID aId = new DtVictimID(new PtString(
@@ -402,7 +400,7 @@ public class DbVictims extends DbAbstract {
 	 *
 	 * @param aCtCrisis The victim to delete from a database, it will use the ID to delete from the database
 	 */
-	static public void deleteVictim(CtVictim aCtVictim) {
+	static public void deleteVictim(DtVictimID aDtVictimID) {
 
 		try {
 			conn = DriverManager
@@ -414,7 +412,7 @@ public class DbVictims extends DbAbstract {
 
 			try {
 				String sql = "DELETE FROM " + dbName + ".victims WHERE id = ?";
-				String id = aCtVictim.id.value.getValue();
+				String id = aDtVictimID.value.getValue();
 
 				PreparedStatement statement = conn.prepareStatement(sql);
 				statement.setString(1, id);

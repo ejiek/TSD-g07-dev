@@ -22,6 +22,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVi
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -164,6 +165,7 @@ public interface ActProxyCoordinator extends ActProxyAuthenticated {
 	 */
 	public PtBoolean ieSendAnAlert(CtAlert aCtAlert) throws RemoteException;
 
-	public PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException, NotBoundException;
+	public PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException, NotBoundException;
 
+	public PtBoolean oeDeleteVictim(DtVictimID aVictimId) throws RemoteException, NotBoundException;
 }

@@ -34,6 +34,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
@@ -182,16 +183,17 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     private Button bttnDeleteInjury;
     @FXML
     void bttnShowVictimsForCrisis_OnClick(ActionEvent event) {
-    	populateVictims();
     	showCrisisVictims();
     }
     @FXML
     void bttnAddVictimForCrisis_OnClick(ActionEvent event) {
     	victimAdd();
+    	showCrisisVictims();
     }
     @FXML
     void bttnDeleteVictimForCrisis_OnClick(ActionEvent event) {
-
+    	if (victimDelete())
+    		showCrisisVictims();
     }
     @FXML
     void bttnShowInjuriesForVictim_OnClick(ActionEvent event) {
@@ -348,6 +350,21 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     	checkVictimAndSend(aDtCrisisID);
 	}
 
+//	/**
+//	 * Shows the modify coordinator screen.
+//	 *
+//	 * @param type The type of edit to be done, this could be add or delete
+//	 */
+	private boolean victimDelete(){
+		CtVictim aCtVictim = (CtVictim)getObjectFromTableView(tblvwVictims);
+		if(aCtVictim != null){
+			DtVictimID aDtVictimID = aCtVictim.id;
+			checkVictimAndDelete(aDtVictimID);
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Populates the tableview with a list of alerts that have the same status as the one provided.
 	 */
@@ -448,6 +465,7 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 	 * Runs the function that will allow the current user to show victims of the selected crisis.
 	 */
 	private void showCrisisVictims(){
+    	populateVictims();
 		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
 		VictimController victimController = new VictimController();
 		if (crisis != null){
@@ -708,8 +726,37 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 //	 */
 	public PtBoolean checkVictimAndSend(DtCrisisID aCrisisId){
 		try {
-			return userController.oeVictim(aCrisisId);
+			return userController.oeCreateVictim(aCrisisId);
 		} catch (ServerOfflineException | ServerNotBoundException e) {
+			showExceptionErrorMessage(e);
+		} catch (IncorrectFormatException e) {
+			showWarningIncorrectInformationEntered(e);
+		} catch (StringToNumberException e){
+			showWarningIncorrectData(e.getMessage());
+		}
+		return new PtBoolean(false);
+	}
+	
+//	/**
+//	 * Checks the data is OK and if so will send it.
+//	 *
+//	 * @param hour The hour on the clock when the accident happened
+//	 * @param minute The minute on the clock when the accident happened
+//	 * @param second The second on the clock when the accident happened
+//	 * @param year The year of the accident
+//	 * @param month The month of the accident
+//	 * @param day The day of the month of the accident
+//	 * @param humanKind The type of human reporting the accident
+//	 * @param phoneNumber The phone number of the human who is reporting the accident
+//	 * @param latitude The latitude of the accident
+//	 * @param longitude The longitude of the accident
+//	 * @param comment The message sent by the human about the accident
+//	 * @return The success of the method
+//	 */
+	public PtBoolean checkVictimAndDelete(DtVictimID aVictimId){
+		try {
+			return userController.oeDeleteVictim(aVictimId);
+		} catch (ServerOfflineException | ServerNotBoundException | NullPointerException e) {
 			showExceptionErrorMessage(e);
 		} catch (IncorrectFormatException e) {
 			showWarningIncorrectInformationEntered(e);

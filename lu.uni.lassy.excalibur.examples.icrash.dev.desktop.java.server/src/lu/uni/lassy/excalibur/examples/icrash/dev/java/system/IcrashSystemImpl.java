@@ -669,14 +669,12 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	}
 
 	
-	public  synchronized PtBoolean oeVictim(DtCrisisID aCrisisId) throws RemoteException{
+	public  synchronized PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException{
 		try{
 			//PreP1
 			isSystemStarted();
 			CtVictim aCtVictim = new CtVictim();
-			System.out.println("before =" + ctState.nextValueForVictimID.value.getValue());
 			int nextValueForVictimID_at_pre = ctState.nextValueForVictimID.value.getValue();
-			System.out.println("before =" + ctState.nextValueForVictimID.value.getValue());
 			ctState.nextValueForVictimID.value = new PtInteger(ctState.nextValueForVictimID.value.getValue() + 1);
 			DtVictimID avId = new DtVictimID(new PtString("" + nextValueForVictimID_at_pre));
 			aCtVictim.init(avId, aCrisisId);
@@ -1123,6 +1121,26 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	}
 	
 	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeDeleteCoordinator(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID)
+	 */
+	public PtBoolean oeDeleteVictim(DtVictimID aDtVictimID) throws RemoteException {
+		try {
+			//PreP1
+			isSystemStarted();
+			//PreP2
+			isUserLoggedIn();
+			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
+				cmpSystemCtVictim.remove(aDtVictimID.value.getValue());
+				DbVictims.deleteVictim(aDtVictimID);
+			}
+			return new PtBoolean(true);
+		} catch (Exception e) {
+			log.error("Exception in oeDeleteCoordinator..." + e);
+			return new PtBoolean(false);
+		}
+	}
+
+	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeGetAlertsSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus)
 	 */
 	public PtBoolean oeGetAlertsSet(EtAlertStatus aEtAlertStatus) {
@@ -1376,6 +1394,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 
 		return new PtBoolean(true);
 	}
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeDeleteCoordinator(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID)
 	 */

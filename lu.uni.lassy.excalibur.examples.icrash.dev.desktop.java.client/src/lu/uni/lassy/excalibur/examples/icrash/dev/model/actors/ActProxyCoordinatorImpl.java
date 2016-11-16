@@ -24,6 +24,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVi
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -57,21 +58,31 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 			throws RemoteException, NotBoundException {
 		super(user);
 	}
-
-	
 	
 //	/* (non-Javadoc)
 //	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyComCompany#oeAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
 //	 */
-	synchronized public PtBoolean oeVictim(DtCrisisID aCrisisId)
+	synchronized public PtBoolean oeCreateVictim(DtCrisisID aCrisisId)
 			throws RemoteException, NotBoundException {
 
 		if (getServerSideActor() != null)
-			return ((ActCoordinator) getServerSideActor()).oeVictim(aCrisisId);
+			return ((ActCoordinator) getServerSideActor()).oeCreateVictim(aCrisisId);
 		else
 			return new PtBoolean(false);
 	}
 
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyComCompany#oeAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
+//	 */
+	synchronized public PtBoolean oeDeleteVictim(DtVictimID aVictimId)
+			throws RemoteException, NotBoundException {
+
+		if (getServerSideActor() != null)
+			return ((ActCoordinator) getServerSideActor()).oeDeleteVictim(aVictimId);
+		else
+			return new PtBoolean(false);
+	}
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
 	 */
