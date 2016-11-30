@@ -20,6 +20,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
@@ -109,6 +110,18 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 			return new PtBoolean(false);
 	}
 
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
+//	 */
+	synchronized public PtBoolean oeGetInjurySet()
+			throws RemoteException, NotBoundException {
+		if (getServerSideActor() != null){
+			MapOfCtVictims.clear();
+			return ((ActCoordinator) getServerSideActor()).oeGetInjurySet();
+		}
+		else
+			return new PtBoolean(false);
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#oeGetAlertsSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus)
 	 */
@@ -241,11 +254,25 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 		return new PtBoolean(true);
 	}
 	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
+//	 */
+	public PtBoolean ieSendAInjury(CtInjury aCtInjury) {
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActCoordinator.ieSendAInjury received from system");
+		log.info("injury id '" + aCtInjury.id.value.getValue().toString() + "'");
+		listOfMessages.add(new Message(MessageType.ieSendAInjury, "Injury " + aCtInjury.id.value.getValue() + " was sent"));
+		this.MapOfCtInjuries.put(aCtInjury.id.value.getValue(), aCtInjury);
+		return new PtBoolean(true);
+	}
 	/** The list of class type crises this user has retrieved from the server. */
 	private Hashtable<String, CtCrisis> _listOfCtCrisis = new Hashtable<String, CtCrisis>(); 
 	
 	/** The list of class type victims this user has retrieved from the server. */
 	private Hashtable<String, CtVictim> _listOfCtVictims = new Hashtable<String, CtVictim>(); 
+	
+//	/** The list of class type victims this user has retrieved from the server. */
+	private Hashtable<String, CtInjury> _listOfCtInjuries = new Hashtable<String, CtInjury>(); 
 	
 	/** The list of class type alerts this user has retrieved from the server */
 	private Hashtable<String, CtAlert> _listOfCtAlerts = new Hashtable<String, CtAlert>();
@@ -253,6 +280,10 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 //	/** The observable map of class type crises this user has retrieved from the server. 
 //	 * Being observable, listeners can be attached to it to force the an action once updated*/
 	public ObservableMap<String, CtVictim> MapOfCtVictims = FXCollections.observableMap(_listOfCtVictims);
+	
+//	/** The observable map of class type crises this user has retrieved from the server. 
+//	 * Being observable, listeners can be attached to it to force the an action once updated*/
+	public ObservableMap<String, CtInjury> MapOfCtInjuries = FXCollections.observableMap(_listOfCtInjuries);
 	
 	/** The observable map of class type crises this user has retrieved from the server. 
 	 * Being observable, listeners can be attached to it to force the an action once updated*/

@@ -363,6 +363,15 @@ public interface IcrashSystem extends Remote {
 //	 */
 	public PtBoolean oeGetVictimSet() throws RemoteException; 
 	
+//	/**
+//	 * Gets the crisis with the status specified.
+//	 *
+//	 * @param aEtCrisisStatus The status to filter the crisis by
+//	 * @return The success of the method
+//	 * @throws RemoteException Thrown if the server is offline
+//	 */
+	public PtBoolean oeGetInjurySet() throws RemoteException; 
+	
 	/**
 	 * Gets the alerts with the status specified.
 	 *

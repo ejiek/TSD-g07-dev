@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 
 import javafx.util.Callback;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.CoordinatorController;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.InjuryController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.VictimController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectActorException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
@@ -181,10 +182,13 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     private Button bttnAddInjury;
     @FXML
     private Button bttnDeleteInjury;
+    
+    ///////////////////////////////////////////////////////////
     @FXML
     void bttnShowVictimsForCrisis_OnClick(ActionEvent event) {
     	showCrisisVictims();
     }
+    
     @FXML
     void bttnAddVictimForCrisis_OnClick(ActionEvent event) {
     	victimAdd();
@@ -195,19 +199,23 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     	if (victimDelete())
     		showCrisisVictims();
     }
+    ///////////////////////////////////////////////////////////
     @FXML
     void bttnShowInjuriesForVictim_OnClick(ActionEvent event) {
-    	//showVictimInjuries();
+    	showVictimInjuries();
     }
+    
     @FXML
     void bttnAddInjuryForVictim_OnClick(ActionEvent event) {
-
+    	//injuryAdd();
+    	//showVictimInjuries();
     }
+    
     @FXML
     void bttnDeleteInjuryForVictim_OnClick(ActionEvent event) {
 
     }
-    
+    ///////////////////////////////////////////////////////////
     /**
      * Button event that deals with changing the status of a crisis
      *
@@ -340,6 +348,16 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		}
 	}
 	
+//	/**
+//	 * Populates the tableview with a list of victims.
+//	 */
+	private void populateInjuries(){
+		try {
+			userController.oeGetInjurySet();
+		} catch (ServerOfflineException | ServerNotBoundException e) {
+			showServerOffLineMessage(e);
+		}
+	}
 //	/**
 //	 * Shows the modify coordinator screen.
 //	 *
@@ -480,6 +498,24 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		}
 	}
 	
+//	/**
+//	 * Runs the function that will allow the current user to show victims of the selected crisis.
+//	 */
+	private void showVictimInjuries(){
+    	populateInjuries();
+		CtVictim victim = (CtVictim)getObjectFromTableView(tblvwVictims);
+		InjuryController injuryController = new InjuryController();
+		if (victim != null){
+			try {
+				addInjuriesToTableView(tblvwInjuries, injuryController.getVictimInjuries(victim.id));
+			} catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			} catch (NullPointerException e){
+				Log4JUtils.getInstance().getLogger().error(e);
+				showExceptionErrorMessage(new NullValueException(this.getClass()));
+			}
+		}
+	}
 	/**
 	 * Runs the function that will allow the current user to change the selected crisis' status.
 	 */

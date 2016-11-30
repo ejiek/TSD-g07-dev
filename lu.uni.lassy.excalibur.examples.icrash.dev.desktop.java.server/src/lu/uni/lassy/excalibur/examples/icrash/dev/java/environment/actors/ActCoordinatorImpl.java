@@ -20,6 +20,7 @@ import java.rmi.registry.Registry;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
@@ -70,7 +71,7 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 		//set up ActAuthenticated instance that performs the request
 		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
 
-		log.info("message ActCoordinator.oeGetCrisisSet sent to system");
+		log.info("message ActCoordinator.oeGetVictimSet sent to system");
 		PtBoolean res = iCrashSys_Server.oeGetVictimSet();
 			
 			
@@ -80,7 +81,32 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 
 		return res;
 	}
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
+//	 */
+	synchronized public PtBoolean oeGetInjurySet() throws RemoteException, NotBoundException {
+	
+		Logger log = Log4JUtils.getInstance().getLogger();
+	
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+			 	
+		//Gathering the remote object as it was published into the registry
+	    IcrashSystem iCrashSys_Server = (IcrashSystem)registry.lookup("iCrashServer");
+		
+	
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
 
+		log.info("message ActCoordinator.oeGetInjurySet sent to system");
+		PtBoolean res = iCrashSys_Server.oeGetInjurySet();
+			
+			
+		if(res.getValue() == true)
+			log.info("operation oeGetInjurySet successfully executed by the system");
+
+
+		return res;
+	}
 	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
@@ -417,6 +443,26 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 		return new PtBoolean(true);
 	}
 	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
+//	 */
+	public PtBoolean ieSendAInjury(CtInjury aCtInjury) {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		log.info("message ActCoordinator.ieSendAInjury received from system");
+		log.info("injury id '"	+ aCtInjury.id.value.getValue().toString() +"'");
+		
+		for(ActProxyAuthenticated aProxy : listeners)
+			try {
+				if (aProxy instanceof ActProxyCoordinator)
+					((ActProxyCoordinator)aProxy).ieSendAInjury(aCtInjury);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+			}
+
+		return new PtBoolean(true);
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator#ieSendAnAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert)
 	 */

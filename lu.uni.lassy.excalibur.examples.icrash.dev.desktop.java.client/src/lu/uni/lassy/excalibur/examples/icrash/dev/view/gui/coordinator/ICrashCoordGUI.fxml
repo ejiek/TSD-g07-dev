@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.coordinator.ICrashCoordGUIController">
+<AnchorPane prefHeight="500.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.coordinator.ICrashCoordGUIController">
    <children>
       <SplitPane dividerPositions="0.6204819277108434" orientation="VERTICAL" prefHeight="509.0" prefWidth="748.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -111,22 +111,22 @@
                                        <bottom>
                                           <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                              <children>
-                                                <TableView id="tblvwVictims" fx:id="tblvwVictims" prefHeight="200.0" prefWidth="200.0" />
+                                                <TableView id="tblvwVictims" fx:id="tblvwVictims" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
                                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                                    <children>
-                                                      <Button id="bttnShowVictims" fx:id="bttnShowVictims" mnemonicParsing="false" onAction="#bttnShowVictimsForCrisis_OnClick" text="Show victims" />
+                                                      <Button id="bttnShowVictims" fx:id="bttnShowVictims" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnShowVictimsForCrisis_OnClick" text="Show victims" />
                                                       <Button id="bttnAddVictim" fx:id="bttnAddVictim" mnemonicParsing="false" onAction="#bttnAddVictimForCrisis_OnClick" text="Add victim" />
                                                       <Button id="bttnDeleteVictim" fx:id="bttnDeleteVictim" mnemonicParsing="false" onAction="#bttnDeleteVictimForCrisis_OnClick" text="Delete victim" />
                                                    </children>
                                                 </VBox>
-                                                <TableView id="tblvwInjuries" fx:id="tblvwInjuries" prefHeight="200.0" prefWidth="200.0" />
+                                                <TableView id="tblvwInjuries" fx:id="tblvwInjuries" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                    <children>
                                                       <VBox prefHeight="200.0" prefWidth="100.0">
                                                          <children>
-                                                            <Button id="bttnShowInjuries" fx:id="bttnShowInjuries" mnemonicParsing="false" onAction="#bttnShowInjuriesForVictim_OnClick" text="Show injuries" />
+                                                            <Button id="bttnShowInjuries" fx:id="bttnShowInjuries" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnShowInjuriesForVictim_OnClick" text="Show injuries" />
                                                             <Button id="bttnAddInjury" fx:id="bttnAddInjury" mnemonicParsing="false" onAction="#bttnAddInjuryForVictim_OnClick" text="Add injury" />
-                                                            <Button id="bttnDeleteInjury" fx:id="bttnDeleteInjury" mnemonicParsing="false" onAction="#bttnDeleteInjuryForVictim_OnClick" text="Delete injury" />
+                                                            <Button id="bttnDeleteInjury" fx:id="bttnDeleteInjury" minWidth="-Infinity" mnemonicParsing="false" onAction="#bttnDeleteInjuryForVictim_OnClick" text="Delete injury" />
                                                          </children>
                                                       </VBox>
                                                       <ComboBox id="cmbbxInjuryKind" fx:id="cmbbxInjuryKind" prefWidth="150.0" />

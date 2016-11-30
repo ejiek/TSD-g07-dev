@@ -669,22 +669,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	}
 
 	
-	public  synchronized PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException{
-		try{
-			//PreP1
-			isSystemStarted();
-			CtVictim aCtVictim = new CtVictim();
-			int nextValueForVictimID_at_pre = ctState.nextValueForVictimID.value.getValue();
-			ctState.nextValueForVictimID.value = new PtInteger(ctState.nextValueForVictimID.value.getValue() + 1);
-			DtVictimID avId = new DtVictimID(new PtString("" + nextValueForVictimID_at_pre));
-			aCtVictim.init(avId, aCrisisId);
-			DbVictims.insertVictim(aCtVictim, aCrisisId);
-		}
-		catch(Exception e){
-			log.error("Exception in oeVictim..." + e);
-		}
-		return new PtBoolean(false);
-	}
+
 	
 	public  synchronized PtBoolean oeInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind) throws RemoteException{
 		try{
@@ -1126,6 +1111,39 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
+//	 */
+	public PtBoolean oeGetInjurySet() {
+		try{
+			//PreP1
+			isSystemStarted();
+			//PreP2
+			isUserLoggedIn();
+			if (currentRequestingAuthenticatedActor instanceof ActCoordinator || currentRequestingAuthenticatedActor instanceof ActHospital) {
+				//go through all existing crises
+				cmpSystemCtInjury.clear();
+				cmpSystemCtInjury = DbInjuries.getSystemInjuries();
+				for (String injuryKey : cmpSystemCtInjury.keySet()) {
+					System.out.println(injuryKey);
+					CtInjury injury = cmpSystemCtInjury.get(injuryKey);
+					if (currentRequestingAuthenticatedActor instanceof ActCoordinator){
+						ActCoordinator aActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
+						injury.isSentToCoordinator(aActCoordinator);
+					}
+					else{
+						ActHospital aActHospital = (ActHospital) currentRequestingAuthenticatedActor;
+						injury.isSentToHospital(aActHospital);
+					}
+				}
+				return new PtBoolean(true);
+			}
+		}
+		catch (Exception e){
+			log.error("Exception in oeGetVictimSet..." + e);
+		}
+		return new PtBoolean(false);
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeDeleteCoordinator(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID)
 	 */
@@ -1319,7 +1337,23 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		}
 		return new PtBoolean(false);
 	}
-
+	public  synchronized PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException{
+		try{
+			//PreP1
+			isSystemStarted();
+			//PostF1
+			CtVictim aCtVictim = new CtVictim();
+			int nextValueForVictimID_at_pre = ctState.nextValueForVictimID.value.getValue();
+			ctState.nextValueForVictimID.value = new PtInteger(ctState.nextValueForVictimID.value.getValue() + 1);
+			DtVictimID avId = new DtVictimID(new PtString("" + nextValueForVictimID_at_pre));
+			aCtVictim.init(avId, aCrisisId);
+			DbVictims.insertVictim(aCtVictim, aCrisisId);
+		}
+		catch(Exception e){
+			log.error("Exception in oeVictim..." + e);
+		}
+		return new PtBoolean(false);
+	}
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeAddCoordinator(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword)
 	 */

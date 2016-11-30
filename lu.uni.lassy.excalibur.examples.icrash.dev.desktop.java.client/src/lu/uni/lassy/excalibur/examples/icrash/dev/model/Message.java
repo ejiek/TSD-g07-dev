@@ -34,6 +34,9 @@ public class Message {
 		/** The ie send a victim. */
 		ieSendAVictim,
 		
+		/** The ie send an injury. */
+		ieSendAInjury,
+		
 		/** The ie coordinator added. */
 		ieCoordinatorAdded,
 		

@@ -16,18 +16,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
@@ -88,113 +83,6 @@ public class ActProxyHospitalImpl extends ActProxyAuthenticatedImpl
 	}
 	
 	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeGetAlertsSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus)
-	 */
-	synchronized public PtBoolean oeGetAlertsSet(EtAlertStatus aEtAlertStatus)
-			throws RemoteException, NotBoundException {
-		if (getServerSideActor() != null){
-			MapOfCtAlerts.clear();
-			return ((ActHospital) getServerSideActor())
-					.oeGetAlertsSet(aEtAlertStatus);
-		}
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeSetCrisisHandler(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID)
-	 */
-	synchronized public PtBoolean oeSetCrisisHandler(DtCrisisID aDtCrisisID)
-			throws RemoteException, NotBoundException {
-
-		if (getServerSideActor() != null)
-			return ((ActHospital) getServerSideActor())
-					.oeSetCrisisHandler(aDtCrisisID);
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeValidateAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID)
-	 */
-	synchronized public PtBoolean oeValidateAlert(DtAlertID aDtAlertID)
-			throws RemoteException, NotBoundException {
-
-		if (getServerSideActor() != null)
-			return ((ActHospital) getServerSideActor())
-					.oeValidateAlert(aDtAlertID);
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeInvalidateAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID)
-	 */
-	synchronized public PtBoolean oeInvalidateAlert(DtAlertID aDtAlertID)
-			throws RemoteException, NotBoundException {
-
-		if (getServerSideActor() != null)
-			return ((ActHospital) getServerSideActor())
-					.oeInvalidateAlert(aDtAlertID);
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeSetCrisisStatus(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
-	 */
-	synchronized public PtBoolean oeSetCrisisStatus(DtCrisisID aDtCrisisID,
-			EtCrisisStatus aEtCrisisStatus) throws RemoteException,
-			NotBoundException {
-
-		if (getServerSideActor() != null)
-			return ((ActHospital) getServerSideActor()).oeSetCrisisStatus(
-					aDtCrisisID, aEtCrisisStatus);
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeSetCrisisType(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType)
-	 */
-	synchronized public PtBoolean oeSetCrisisType(DtCrisisID aDtCrisisID,
-			EtCrisisType aEtCrisisType) throws RemoteException,
-			NotBoundException {
-
-		if (getServerSideActor() != null)
-			return ((ActHospital) getServerSideActor()).oeSetCrisisType(
-					aDtCrisisID, aEtCrisisType);
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeReportOnCrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
-	 */
-	synchronized public PtBoolean oeReportOnCrisis(DtCrisisID aDtCrisisID,
-			DtComment aDtComment) throws RemoteException, NotBoundException {
-
-		if (getServerSideActor() != null)
-			return ((ActHospital) getServerSideActor()).oeReportOnCrisis(
-					aDtCrisisID, aDtComment);
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#oeCloseCrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID)
-	 */
-	synchronized public PtBoolean oeCloseCrisis(DtCrisisID aDtCrisisID)
-			throws RemoteException, NotBoundException {
-
-		if (getServerSideActor() != null)
-			return ((ActHospital) getServerSideActor())
-					.oeCloseCrisis(aDtCrisisID);
-		else
-			return new PtBoolean(false);
-	}
-
-	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyHospital#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
 	 */
 	public PtBoolean ieSendACrisis(CtCrisis aCtCrisis) {
@@ -219,6 +107,34 @@ public class ActProxyHospitalImpl extends ActProxyAuthenticatedImpl
 		return new PtBoolean(true);
 	}
 	
+//	/** The list of class type victims this user has retrieved from the server. */
+	private Hashtable<String, CtInjury> _listOfCtInjuries = new Hashtable<String, CtInjury>(); 
+//	/** The observable map of class type crises this user has retrieved from the server. 
+//	 * Being observable, listeners can be attached to it to force the an action once updated*/
+	public ObservableMap<String, CtInjury> MapOfCtInjuries = FXCollections.observableMap(_listOfCtInjuries);	
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
+//	 */
+	public PtBoolean ieSendAInjury(CtInjury aCtInjury) {
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActHospital.ieSendAInjury received from system");
+		log.info("injury id '" + aCtInjury.id.value.getValue().toString() + "'");
+		listOfMessages.add(new Message(MessageType.ieSendAInjury, "Injury " + aCtInjury.id.value.getValue() + " was sent"));
+		this.MapOfCtInjuries.put(aCtInjury.id.value.getValue(), aCtInjury);
+		return new PtBoolean(true);
+	}
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyCoordinator#ieSendACrisis(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis)
+//	 */
+//	public PtBoolean ieSendAInjury(CtInjury aCtInjury) {
+//		Logger log = Log4JUtils.getInstance().getLogger();
+//		log.info("message ActHospital.ieSendAInjury received from system");
+//		log.info("injury id '" + aCtInjury.id.value.getValue().toString() + "'");
+//		listOfMessages.add(new Message(MessageType.ieSendAVictim, "Victim " + aCtVictim.id.value.getValue() + " was sent"));
+//		this.MapOfCtVictims.put(aCtVictim.id.value.getValue(), aCtVictim);
+//		return new PtBoolean(true);
+//	}
+	
 	/** The list of class type crises this user has retrieved from the server. */
 	private Hashtable<String, CtCrisis> _listOfCtCrisis = new Hashtable<String, CtCrisis>(); 
 	
@@ -235,6 +151,11 @@ public class ActProxyHospitalImpl extends ActProxyAuthenticatedImpl
 //	/** The observable map of class type crises this user has retrieved from the server. 
 //	 * Being observable, listeners can be attached to it to force the an action once updated*/
 	public ObservableMap<String, CtVictim> MapOfCtVictims = FXCollections.observableMap(_listOfCtVictims);
+	
+	
+
+	
+
 	
 	/** The observable map of class type alerts this user has retrieved from the server. 
 	 * Being observable, listeners can be attached to it to force the an action once updated*/

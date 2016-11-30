@@ -270,6 +270,30 @@ public class CoordinatorController extends AbstractUserController {
 		return new PtBoolean(false);
 	}
 	
+//	/**
+//	 * Gets a list of all crises from the server with the status type of the one provided
+//	 * The list will be sent to the actor directly, via the ie method.
+//	 *
+//	 * @param aEtCrisisStatus The status of the crisis to filter by
+//	 * @return The success of the method
+//	 * @throws ServerOfflineException Thrown if the server is offline
+//	 * @throws ServerNotBoundException Thrown if the server is not bound
+//	 */
+	public PtBoolean oeGetInjurySet() throws ServerOfflineException, ServerNotBoundException{
+		if (this.getUserType() == UserType.Coordinator){
+			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+			try {
+				return actCoord.oeGetInjurySet();
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+	}
 	/**
 	 * Gets a list of all alerts from the server with the status type of the one provided
 	 * The list will be sent to the actor directly, via the ie method.
