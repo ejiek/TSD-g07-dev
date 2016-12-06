@@ -14,10 +14,12 @@ package lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.zip.CRC32;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 
 /**
  * The Class CtAlert, that hold details about the alert instance.
@@ -32,6 +34,9 @@ public class CtAlert implements Serializable {
 	
 	/** The current status of the alert.*/
 	public EtAlertStatus status;
+	
+	/** The current status of the alert.*/
+	public EtAlertCorruptionKind corruption;
 	
 	/** The location of the alert. */
 	public DtGPSLocation location;
@@ -50,17 +55,35 @@ public class CtAlert implements Serializable {
 	 * @param aLocation the location of the alert
 	 * @param aInstant the date and time of the accident the alert is associated with
 	 * @param aComment the comment associated with the alert.
+	 * @param aCorruption type of alert corruption.
 	 * @return the success of the initialisation of the alert
 	 */
 	public PtBoolean init(DtAlertID aId, EtAlertStatus aStatus,
-			DtGPSLocation aLocation, DtDateAndTime aInstant, DtComment aComment) {
+			DtGPSLocation aLocation, DtDateAndTime aInstant, DtComment aComment, EtAlertCorruptionKind aCorruption) {
 			
 		id = aId;
 		status = aStatus;
 		location = aLocation;
 		instant = aInstant;
 		comment = aComment;
+		corruption = aCorruption;
 		return new PtBoolean(true);
+	}
+	
+	/**
+	 * Initialises the alert without corruption kind.
+	 *
+	 * @param aId the ID of the alert
+	 * @param aStatus the status of the alert
+	 * @param aLocation the location of the alert
+	 * @param aInstant the date and time of the accident the alert is associated with
+	 * @param aComment the comment associated with the alert.
+	 * @return the success of the initialisation of the alert
+	 */
+	public PtBoolean init(DtAlertID aId, EtAlertStatus aStatus,
+			DtGPSLocation aLocation, DtDateAndTime aInstant, DtComment aComment) {
+			
+		return init(aId, aStatus, aLocation, aInstant, aComment, EtAlertCorruptionKind.regular);
 	}
 
 	/**
@@ -74,6 +97,7 @@ public class CtAlert implements Serializable {
 		aActCoordinator.ieSendAnAlert(this);
 		return new PtBoolean(true);
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

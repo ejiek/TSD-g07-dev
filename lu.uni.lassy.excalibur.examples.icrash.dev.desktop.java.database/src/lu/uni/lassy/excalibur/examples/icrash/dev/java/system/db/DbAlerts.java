@@ -12,6 +12,7 @@
  ******************************************************************************/
 package lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,17 +23,20 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.zip.CRC32;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCRC;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLatitude;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLongitude;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertCorruptionKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -72,18 +76,29 @@ public class DbAlerts extends DbAbstract {
 					answer = res.getInt("numberOfAlertsl");	
 
 			}catch (SQLException s){
-				log.error("SQL statement is not executed! "+s);
+				log.error("SQL statement is not executed!1 "+s);
 			}
 			conn.close();
 			} catch (Exception e) {
 			logException(e);
+			System.out.println("4");
 		}
 		return answer;
 
 	}
 
-
-
+	private static String alertHashCode(DtAlertID aId, String theStatus,
+			DtGPSLocation aDtGPSLocation, DtDateAndTime aInstant, DtComment aDtComment) {
+        CRC32 crc = new CRC32();
+        crc.update(aId.value.getValue().getBytes());
+        crc.update(theStatus.getBytes());
+        crc.update(aDtGPSLocation.longitude.value.toString().getBytes());
+        crc.update(aDtGPSLocation.latitude.value.toString().getBytes());
+        crc.update(aInstant.toString().getBytes());
+        crc.update(aDtComment.value.getValue().getBytes());
+        return Long.toString((long)crc.getValue());   
+    }
+	
 	/**
 	 * Insert an alert into the database.
 	 *
@@ -93,13 +108,17 @@ public class DbAlerts extends DbAbstract {
 		try {
 			conn = DriverManager
 					.getConnection(url + dbName, userName, password);
-			log.debug("Connected to the database");
-
+			log.debug("Connected to the database"); 
+			
+			backupConn = DriverManager
+					.getConnection(url + dbBackUpName, userName, password);
+			log.debug("Connected to the backup database"); 
 			/********************/
 			//Insert
 
 			try {
 				Statement st = conn.createStatement();
+				Statement backupSt = backupConn.createStatement();
 
 				String id = aCtAlert.id.value.getValue();
 				String status = aCtAlert.status.toString();
@@ -121,23 +140,35 @@ public class DbAlerts extends DbAbstract {
 				String instant = sdf.format(calendar.getTime());
 
 				String comment = aCtAlert.comment.value.getValue();
+				String crc = alertHashCode(aCtAlert.id, status, aCtAlert.location, aCtAlert.instant, aCtAlert.comment);
+				String corruption = aCtAlert.corruption.toString();
 
 				log.debug("[DATABASE]-Insert alert");
 				int val = st.executeUpdate("INSERT INTO " + dbName + ".alerts"
-						+ "(id,status,latitude,longitude,instant,comment)"
+						+ "(id,status,latitude,longitude,instant,comment,crc,corruption)"
 						+ "VALUES(" + "'" + id + "'" + ",'" + status + "', "
 						+ latitude + ", " + longitude + ", '" + instant + "','"
-						+ comment + "')");
+						+ comment + "', '" + crc + "', '" + corruption + "')");
+				
+				log.debug("[DATABASE BACKUP]-Insert alert");
+				int backupVal = backupSt.executeUpdate("INSERT INTO " + dbBackUpName + ".alerts"
+						+ "(id,status,latitude,longitude,instant,comment,crc,corruption)"
+						+ "VALUES(" + "'" + id + "'" + ",'" + status + "', "
+						+ latitude + ", " + longitude + ", '" + instant + "','"
+						+ comment + "', '" + crc + "', '" + corruption + "')");
 
 				log.debug(val + " row affected");
+				log.debug(backupVal + " row affected");
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!2 " + s);
 			}
 
 			conn.close();
+			backupConn.close();
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("36");
 		}
 
 	}
@@ -151,25 +182,32 @@ public class DbAlerts extends DbAbstract {
 	static public CtAlert getAlert(String alertId) {
 
 		CtAlert aCtAlert = new CtAlert();
+			
+		aCtAlert = getInfo(alertId, conn, dbName);
 
+		return aCtAlert;
+
+	}
+
+	static private CtAlert getInfo(String alertId, Connection aConn, String ADbName){
 		try {
-			conn = DriverManager
-					.getConnection(url + dbName, userName, password);
+			aConn = DriverManager
+					.getConnection(url + ADbName, userName, password);
 			log.debug("Connected to the database");
 
 			/********************/
 			//Select
-
+			
 			try {
-				String sql = "SELECT * FROM " + dbName + ".alerts WHERE id = "
+				String sql = "SELECT * FROM " + ADbName + ".alerts WHERE id = "
 						+ alertId;
 
-				PreparedStatement statement = conn.prepareStatement(sql);
+				PreparedStatement statement = aConn.prepareStatement(sql);
 				ResultSet res = statement.executeQuery(sql);
 
 				if (res.next()) {
 
-					aCtAlert = new CtAlert();
+					CtAlert aCtAlert = new CtAlert();
 					//alert's id
 					DtAlertID aId = new DtAlertID(new PtString(
 							res.getString("id")));
@@ -184,6 +222,16 @@ public class DbAlerts extends DbAbstract {
 					if (theStatus.equals(EtAlertStatus.valid.name()))
 						aStatus = EtAlertStatus.valid;
 
+					//alert's corruption -> [regular,corrupted,restored]
+					String theCorruption = res.getString("corruption");
+					EtAlertCorruptionKind aCorruption = null;
+					if (theCorruption.equals(EtAlertCorruptionKind.regular.name()))
+						aCorruption = EtAlertCorruptionKind.regular;
+					if (theCorruption.equals(EtAlertCorruptionKind.restored.name()))
+						aCorruption = EtAlertCorruptionKind.restored;
+					if (theCorruption.equals(EtAlertCorruptionKind.corrupted.name()))
+						aCorruption = EtAlertCorruptionKind.corrupted;
+					
 					//alert's location
 					DtLatitude aDtLatitude = new DtLatitude(new PtReal(
 							res.getDouble("latitude")));
@@ -207,29 +255,47 @@ public class DbAlerts extends DbAbstract {
 					DtTime aDtTime = ICrashUtils.setTime(h, min, sec);
 					DtDateAndTime aInstant = new DtDateAndTime(aDtDate, aDtTime);
 
-					//alert's comment  
 					DtComment aDtComment = new DtComment(new PtString(
 							res.getString("comment")));
+					
+					if (alertHashCode(aId, theStatus, aDtGPSLocation, aInstant, aDtComment).equals(res.getString("crc")) ){
+						
+						if(ADbName.equals(dbBackUpName)){
+							
+						} else{
+							
+						}
+						
+						
+					} 
+					else {
+						if(ADbName.equals(dbBackUpName)){
 
+						} else {
+							return getInfo(alertId, backupConn, dbBackUpName);
+						}
+						
+					}
+					
 					aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
-							aDtComment);
+							aDtComment, aCorruption);
+					return aCtAlert;
 
 				}
 
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!3 " + s);
 			}
-			conn.close();
+			aConn.close();
 			log.debug("Disconnected from database");
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("1");
 		}
-
-		return aCtAlert;
-
+		return null;
 	}
-
+	
 	/**
 	 * Gets the current highest number used for an alert ID in the database.
 	 *
@@ -259,13 +325,14 @@ public class DbAlerts extends DbAbstract {
 				}
 
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!4 " + s);
 			}
 			conn.close();
 			log.debug("Disconnected from database");
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("19");
 		}
 
 		return maxAlertId;
@@ -314,6 +381,16 @@ public class DbAlerts extends DbAbstract {
 					if (theStatus.equals(EtAlertStatus.valid.name()))
 						aStatus = EtAlertStatus.valid;
 
+					//alert's corruption -> [regular,corrupted,restored]
+					String theCorruption = res.getString("corruption");
+					EtAlertCorruptionKind aCorruption = null;
+					if (theCorruption.equals(EtAlertCorruptionKind.regular.name()))
+						aCorruption = EtAlertCorruptionKind.regular;
+					if (theCorruption.equals(EtAlertCorruptionKind.restored.name()))
+						aCorruption = EtAlertCorruptionKind.restored;
+					if (theCorruption.equals(EtAlertCorruptionKind.corrupted.name()))
+						aCorruption = EtAlertCorruptionKind.corrupted;
+
 					//alert's location
 					DtLatitude aDtLatitude = new DtLatitude(new PtReal(
 							res.getDouble("latitude")));
@@ -337,13 +414,17 @@ public class DbAlerts extends DbAbstract {
 					DtTime aDtTime = ICrashUtils.setTime(h, min, sec);
 					DtDateAndTime aInstant = new DtDateAndTime(aDtDate, aDtTime);
 
-					//alert's comment  
 					DtComment aDtComment = new DtComment(new PtString(
 							res.getString("comment")));
-
-					//init aCtAlert instance
-					aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
-							aDtComment);
+					
+					if (alertHashCode(aId, theStatus, aDtGPSLocation, aInstant, aDtComment).equals(res.getString("crc")) ){
+						aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
+								aDtComment, aCorruption);
+						
+					} else {
+						aCtAlert = getInfo(aId.value.getValue(), backupConn, dbBackUpName);
+					}
+					
 
 					//add instance to the hash
 					cmpSystemCtAlert
@@ -352,13 +433,14 @@ public class DbAlerts extends DbAbstract {
 				}
 
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!5 " + s);
 			}
 			conn.close();
 			log.debug("Disconnected from database");
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("20");
 		}
 
 		return cmpSystemCtAlert;
@@ -410,6 +492,16 @@ public class DbAlerts extends DbAbstract {
 					if (theStatus.equals(EtAlertStatus.valid.name()))
 						aStatus = EtAlertStatus.valid;
 
+					//alert's corruption -> [regular,corrupted,restored]
+					String theCorruption = res.getString("corruption");
+					EtAlertCorruptionKind aCorruption = null;
+					if (theCorruption.equals(EtAlertCorruptionKind.regular.name()))
+						aCorruption = EtAlertCorruptionKind.regular;
+					if (theCorruption.equals(EtAlertCorruptionKind.restored.name()))
+						aCorruption = EtAlertCorruptionKind.restored;
+					if (theCorruption.equals(EtAlertCorruptionKind.corrupted.name()))
+						aCorruption = EtAlertCorruptionKind.corrupted;
+
 					//alert's location
 					DtLatitude aDtLatitude = new DtLatitude(new PtReal(
 							res.getDouble("alerts.latitude")));
@@ -436,10 +528,14 @@ public class DbAlerts extends DbAbstract {
 					//alert's comment  
 					DtComment aDtComment = new DtComment(new PtString(
 							res.getString("alerts.comment")));
-
-					//init aCtAlert instance
-					aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
-							aDtComment);
+					
+					if (alertHashCode(aId, theStatus, aDtGPSLocation, aInstant, aDtComment).equals(res.getString("alerts.crc")) ){
+						aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
+								aDtComment, aCorruption);
+						
+					} else {
+						aCtAlert = getInfo(aId.value.getValue(), backupConn, dbBackUpName);
+					}
 
 					//*************************************
 					aCtCrisis = new CtCrisis();
@@ -506,13 +602,14 @@ public class DbAlerts extends DbAbstract {
 				}
 
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!6 " + s);
 			}
 			conn.close();
 			log.debug("Disconnected from database");
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("11");
 		}
 
 		return assCtAlertCtCrisis;
@@ -563,6 +660,16 @@ public class DbAlerts extends DbAbstract {
 						aStatus = EtAlertStatus.invalid;
 					if (theStatus.equals(EtAlertStatus.valid.name()))
 						aStatus = EtAlertStatus.valid;
+					
+					//alert's corruption -> [regular,corrupted,restored]
+					String theCorruption = res.getString("corruption");
+					EtAlertCorruptionKind aCorruption = null;
+					if (theCorruption.equals(EtAlertCorruptionKind.regular.name()))
+						aCorruption = EtAlertCorruptionKind.regular;
+					if (theCorruption.equals(EtAlertCorruptionKind.restored.name()))
+						aCorruption = EtAlertCorruptionKind.restored;
+					if (theCorruption.equals(EtAlertCorruptionKind.corrupted.name()))
+						aCorruption = EtAlertCorruptionKind.corrupted;
 
 					//alert's location
 					DtLatitude aDtLatitude = new DtLatitude(new PtReal(
@@ -590,10 +697,14 @@ public class DbAlerts extends DbAbstract {
 					//alert's comment  
 					DtComment aDtComment = new DtComment(new PtString(
 							res.getString("alerts.comment")));
-
-					//init aCtAlert instance
-					aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
-							aDtComment);
+					
+					if (alertHashCode(aId, theStatus, aDtGPSLocation, aInstant, aDtComment).equals(res.getString("alerts.crc")) ){
+						aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
+								aDtComment, aCorruption);
+						
+					} else {
+						aCtAlert = getInfo(aId.value.getValue(), backupConn, dbBackUpName);
+					}
 
 					//*************************************
 					aCtHuman = new CtHuman();
@@ -618,13 +729,14 @@ public class DbAlerts extends DbAbstract {
 				}
 
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!7 " + s);
 			}
 			conn.close();
 			log.debug("Disconnected from database");
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("12");
 		}
 
 		return assCtAlertCtHuman;
@@ -643,25 +755,35 @@ public class DbAlerts extends DbAbstract {
 					.getConnection(url + dbName, userName, password);
 			log.debug("Connected to the database");
 
+			backupConn = DriverManager
+					.getConnection(url + dbBackUpName, userName, password);
+			log.debug("Connected to the backup database"); 
 			/********************/
 			//Delete
 
 			try {
 				String sql = "DELETE FROM " + dbName + ".alerts WHERE id = ?";
+				String backupSql = "DELETE FROM " + dbBackUpName + ".alerts WHERE id = ?";
 				String id = aCtAlert.id.value.getValue();
 
 				PreparedStatement statement = conn.prepareStatement(sql);
+				PreparedStatement backupSt = backupConn.prepareStatement(backupSql);
 				statement.setString(1, id);
+				backupSt.setString(1, id);
 				int rows = statement.executeUpdate();
+				int backRows = backupSt.executeUpdate();
 				log.debug(rows + " row deleted");
+				log.debug(backRows + " row deleted");
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!8 " + s);
 			}
 
 			conn.close();
+			backupConn.close();
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("10");
 		}
 	}
 
@@ -677,28 +799,47 @@ public class DbAlerts extends DbAbstract {
 					.getConnection(url + dbName, userName, password);
 			log.debug("Connected to the database");
 
+			backupConn = DriverManager
+					.getConnection(url + dbBackUpName, userName, password);
+			log.debug("Connected to the backup database"); 
 			/********************/
 			//Update
 
 			try {
 				String sql = "UPDATE " + dbName
-						+ ".alerts SET crisis =? WHERE id = ?";
+						+ ".alerts SET crisis =?, `crc` = ?, `corruption` = ? WHERE id = ?";
+				String backupSql = "UPDATE " + dbBackUpName
+						+ ".alerts SET crisis =?, `crc` = ?, `corruption` = ? WHERE id = ?";
 				String id = aCtAlert.id.value.getValue();
 				String crisiId = aCtCrisis.id.value.getValue();
+				String crc = alertHashCode( aCtAlert.id, aCtAlert.status.toString(),
+						aCtAlert.location, aCtAlert.instant, aCtAlert.comment);
+				String corruption = EtAlertCorruptionKind.regular.toString();
 
 				PreparedStatement statement = conn.prepareStatement(sql);
 				statement.setString(1, crisiId);
-				statement.setString(2, id);
+				statement.setString(2, crc);
+				statement.setString(3, corruption);
+				statement.setString(4, id);
 				int rows = statement.executeUpdate();
 				log.debug(rows + " row affected");
+				
+				PreparedStatement backupStatement = backupConn.prepareStatement(backupSql);
+				backupStatement.setString(1, crisiId);
+				backupStatement.setString(2, crc);
+				backupStatement.setString(3, corruption);
+				backupStatement.setString(4, id);
+				int backupRows = backupStatement.executeUpdate();
+				log.debug(backupRows + " row affected");
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!9 " + s);
 			}
-
+			backupConn.close();
 			conn.close();
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("2");
 		}
 
 	}
@@ -715,32 +856,47 @@ public class DbAlerts extends DbAbstract {
 					.getConnection(url + dbName, userName, password);
 			log.debug("Connected to the database");
 
+			backupConn = DriverManager
+					.getConnection(url + dbBackUpName, userName, password);
+			log.debug("Connected to the backup database"); 
 			/********************/
 			//Update
 
-			try {
-				String sql = "UPDATE " + dbName
-						+ ".alerts SET human =? WHERE id = ?";
-				String id = aCtAlert.id.value.getValue();
-				String humanPhone = aCtHuman.id.value.getValue();
-
-				PreparedStatement statement = conn.prepareStatement(sql);
-				statement.setString(1, humanPhone);
-				statement.setString(2, id);
-				int rows = statement.executeUpdate();
-				log.debug(rows + " row affected");
-			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
-			}
+			bindAlertHuman(dbName, conn, aCtAlert, aCtHuman);
+			bindAlertHuman(dbBackUpName, backupConn, aCtAlert, aCtHuman);
 
 			conn.close();
+			backupConn.close();
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("3");
 		}
 
 	}
 
+	
+	static private void bindAlertHuman(String AdbName, Connection aConn, CtAlert aCtAlert, CtHuman aCtHuman){
+		try {
+		String sql = "UPDATE " + AdbName
+				+ ".alerts SET human =?, `crc` = ?, `corruption` = ? WHERE id = ?";
+		String id = aCtAlert.id.value.getValue();
+		String humanPhone = aCtHuman.id.value.getValue();
+		String crc = alertHashCode( aCtAlert.id, aCtAlert.status.toString(),
+				aCtAlert.location, aCtAlert.instant, aCtAlert.comment);
+		String corruption = EtAlertCorruptionKind.regular.toString();
+
+		PreparedStatement statement = aConn.prepareStatement(sql);
+		statement.setString(1, humanPhone);
+		statement.setString(2, crc);
+		statement.setString(3, corruption);
+		statement.setString(4, id);
+		int rows = statement.executeUpdate();
+		log.debug(rows + " row affected");
+		} catch (SQLException s) {
+			log.error("SQL statement is not executed!10 " + s);
+		}
+	}
 	/**
 	 * Updates a alert in the database to have the same details as the CtAlert
 	 * It will update the alert with the same ID as the ID in the CtAlert.
@@ -754,6 +910,9 @@ public class DbAlerts extends DbAbstract {
 					.getConnection(url + dbName, userName, password);
 			log.debug("Connected to the database");
 
+			backupConn = DriverManager
+					.getConnection(url + dbBackUpName, userName, password);
+			log.debug("Connected to the backup database"); 
 			/********************/
 			//Update
 
@@ -762,9 +921,14 @@ public class DbAlerts extends DbAbstract {
 				String sql = "UPDATE "
 						+ dbName
 						+ ".alerts SET `status` = ?, `latitude` = ?, `longitude` = ?,"
-						+ " `instant` = ?, `comment` = ? WHERE id = ?";
+						+ " `instant` = ?, `comment` = ?, `crc` = ?, `corruption` = ? WHERE id = ?";
+				String backupSql = "UPDATE "
+						+ dbBackUpName
+						+ ".alerts SET `status` = ?, `latitude` = ?, `longitude` = ?,"
+						+ " `instant` = ?, `comment` = ?, `crc` = ?, `corruption` = ? WHERE id = ?";
 				String id = aCtAlert.id.value.getValue();
 				String status = aCtAlert.status.toString();
+				String corruption = aCtAlert.corruption.toString();
 				double latitude = aCtAlert.location.latitude.value.getValue();
 				double longitude = aCtAlert.location.longitude.value.getValue();
 
@@ -783,6 +947,9 @@ public class DbAlerts extends DbAbstract {
 				String instant = sdf.format(calendar.getTime());
 
 				String comment = aCtAlert.comment.value.getValue();
+				
+				String crc = alertHashCode( aCtAlert.id, aCtAlert.status.toString(),
+						aCtAlert.location, aCtAlert.instant, aCtAlert.comment);
 
 				PreparedStatement statement = conn.prepareStatement(sql);
 				statement.setString(1, status);
@@ -790,17 +957,31 @@ public class DbAlerts extends DbAbstract {
 				statement.setDouble(3, longitude);
 				statement.setString(4, instant);
 				statement.setString(5, comment);
-				statement.setString(6, id);
+				statement.setString(6, crc);
+				statement.setString(7, corruption);
+				statement.setString(8, id);
 				int rows = statement.executeUpdate();
 				log.debug(rows + " row affected");
+				PreparedStatement backupStatement = conn.prepareStatement(backupSql);
+				backupStatement.setString(1, status);
+				backupStatement.setDouble(2, latitude);
+				backupStatement.setDouble(3, longitude);
+				backupStatement.setString(4, instant);
+				backupStatement.setString(5, comment);
+				backupStatement.setString(6, crc);
+				backupStatement.setString(7, corruption);
+				backupStatement.setString(8, id);	
+				int backupRows = backupStatement.executeUpdate();
+				log.debug(backupRows + " row affected");
 			} catch (SQLException s) {
-				log.error("SQL statement is not executed! " + s);
+				log.error("SQL statement is not executed!11 " + s);
 			}
-
+			backupConn.close();
 			conn.close();
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("4*20+10+7");
 		}
 
 	}

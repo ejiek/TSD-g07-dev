@@ -57,6 +57,7 @@ public class DbComCompanies extends DbAbstract {
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("103");
 		}
 	}
 	
@@ -97,6 +98,7 @@ public class DbComCompanies extends DbAbstract {
 			
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("102");
 		}
 				
 		return nameComCompany;
@@ -138,6 +140,7 @@ public class DbComCompanies extends DbAbstract {
 			
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("101");
 		}
 				
 		return idComCompany;
@@ -175,6 +178,7 @@ public class DbComCompanies extends DbAbstract {
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("100");
 		}
 	}
 	

@@ -13,14 +13,14 @@
 package lu.uni.lassy.excalibur.examples.icrash.dev.java.utils;
 
 /**
- * The Class MySqlUtils which holds the address, username and other details for accessing the MySQL server.
+ * The Class MySqlBackupUtils which holds the address, username and other details for accessing the MySQL server.
  */
-public class MySqlUtils {
+public class MySqlBackupUtils {
 	
 	/**
-	 * Initiates the MySqlUtils class and reads the properties file to populate the data.
+	 * Initiates the MySqlBackupUtils class and reads the properties file to populate the data.
 	 */
-	private MySqlUtils(){
+	private MySqlBackupUtils(){
 		Log4JUtils log = Log4JUtils.getInstance();
 		String strPort = PropertyUtils.getInstance().getProperty("database.port", String.valueOf(DB_PORT));
 		try{
@@ -30,7 +30,6 @@ public class MySqlUtils {
 			log.getLogger().error(e.getMessage());
 		}			
 		DB_HOST = PropertyUtils.getInstance().getProperty("database.host", DB_HOST);
-		DB_BACKUP_NAME = PropertyUtils.getInstance().getProperty("database.backup_name", DB_BACKUP_NAME);
 		DB_NAME = PropertyUtils.getInstance().getProperty("database.name", DB_NAME);
 		DB_USER_NAME = PropertyUtils.getInstance().getProperty("database.username", DB_USER_NAME);
 		DB_USER_PWD = PropertyUtils.getInstance().getProperty("database.password", DB_USER_PWD);
@@ -38,23 +37,19 @@ public class MySqlUtils {
 		log.getLogger().debug("DB port is " + DB_PORT);
 	}
 	
-	/** The singleton instance of MySqlUtils. */
-	private static MySqlUtils instance;
-	
-	/** The singleton instance of MySqlUtils. */
-	private static MySqlUtils backupInstance;
+	/** The singleton instance of MySqlBackupUtils. */
+	private static MySqlBackupUtils instance;
 	
 	/**
-	 * Gets the singleton instance of the MySqlUtils class.
+	 * Gets the singleton instance of the MySqlBackupUtils class.
 	 *
-	 * @return single instance of MySqlUtils
+	 * @return single instance of MySqlBackupUtils
 	 */
-	public static MySqlUtils getInstance(){
+	public static MySqlBackupUtils getInstance(){
 		if (instance == null)
-			instance = new MySqlUtils();
+			instance = new MySqlBackupUtils();
 		return instance;
 	}
-
 	
 	/** The Constant DB_PORT, the port number of the database to access. */
 	private int DB_PORT = 3306;
@@ -90,10 +85,7 @@ public class MySqlUtils {
 	}
 	
 	/** The Constant DB_NAME, the name of the database with the data in on the database. */
-	private String DB_NAME = "icrashfx";
-	
-	/** The Constant DB_BACKUP_NAME, the name of the backup database with the data in on the database. */
-	private String DB_BACKUP_NAME = "ibackupfx";
+	private String DB_NAME = "ibackupfx";
 	
 	/**
 	 * Gets the DB name.
@@ -102,15 +94,6 @@ public class MySqlUtils {
 	 */
 	public String getDBName(){
 		return this.DB_NAME;
-	}
-	
-	/**
-	 * Gets the DB backup name.
-	 *
-	 * @return the DB backup name
-	 */
-	public String getDBBackupName(){
-		return this.DB_BACKUP_NAME;
 	}
 	
 	/** The Constant DB_USER_NAME, the name of the user to access the database with. */

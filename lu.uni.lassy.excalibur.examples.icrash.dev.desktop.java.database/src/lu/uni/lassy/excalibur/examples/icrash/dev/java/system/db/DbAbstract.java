@@ -26,12 +26,18 @@ public abstract class DbAbstract {
 
 	/** The connection to the database. */
 	public static Connection conn = null;
+	
+	/** The connection to the database. */
+	public static Connection backupConn = null;
 
 	/** The address of the database. */
 	public static String url = MySqlUtils.getInstance().getURL();
 	
 	/** The name of the database. */
 	public static String dbName = MySqlUtils.getInstance().getDBName();
+	
+	/** The name of the backup database. */
+	public static String dbBackUpName = MySqlUtils.getInstance().getDBBackupName();
 
 	/** The user name used to logon to the database. */
 	public static String userName = MySqlUtils.getInstance().getDBUserName();

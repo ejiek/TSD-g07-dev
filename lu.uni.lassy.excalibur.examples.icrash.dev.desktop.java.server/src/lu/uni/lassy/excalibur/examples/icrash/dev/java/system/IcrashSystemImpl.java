@@ -713,6 +713,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			DtAlertID aId = new DtAlertID(new PtString(""
 					+ nextValueForAlertID_at_pre));
 			EtAlertStatus aStatus = EtAlertStatus.pending;
+			
 			aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant, aDtComment);
 			//DB: insert alert in the database
 			DbAlerts.insertAlert(aCtAlert);

@@ -203,6 +203,9 @@ public class CommunicationCompanyGUIController extends AbstractGUIController imp
 	 */
 	public PtBoolean checkDataAndSend(double hour, double minute, double second, int year, int month, int day, EtHumanKind humanKind, String phoneNumber, String latitude, String longitude, String comment){
 		try {
+			if(humanKind != EtHumanKind.anonym && humanKind != EtHumanKind.victim && humanKind != EtHumanKind.witness){
+				humanKind = EtHumanKind.anonym;
+			}
 			return comcompanyController.oeAlert(humanKind, year, month, day, (int)hour, (int)minute, (int)second, phoneNumber, latitude, longitude, comment);
 		} catch (ServerOfflineException | InvalidHumanKindException | ServerNotBoundException e) {
 			showExceptionErrorMessage(e);

@@ -104,6 +104,7 @@ public class DbCrises extends DbAbstract {
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("206");
 		}
 
 	}
@@ -202,6 +203,7 @@ public class DbCrises extends DbAbstract {
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("203");
 		}
 
 		return aCtCrisis;
@@ -244,6 +246,7 @@ public class DbCrises extends DbAbstract {
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("204");
 		}
 
 		return maxCrisisId;
@@ -366,6 +369,7 @@ public class DbCrises extends DbAbstract {
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("202");
 		}
 
 		return assCtCrisisCtCoordinator;
@@ -470,6 +474,7 @@ public class DbCrises extends DbAbstract {
 
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("205");
 		}
 
 		return cmpSystemCtCrisis;
@@ -511,6 +516,7 @@ public class DbCrises extends DbAbstract {
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("200");
 		}
 	}
 
@@ -545,6 +551,7 @@ public class DbCrises extends DbAbstract {
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("201");
 		}
 	}
 
@@ -609,6 +616,7 @@ public class DbCrises extends DbAbstract {
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+			System.out.println("207");
 		}
 	}
 

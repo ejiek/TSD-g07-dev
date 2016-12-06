@@ -49,7 +49,7 @@ public class DbHumans extends DbAbstract{
 				Statement st = conn.createStatement();
 				
 				String phone = aCtHuman.id.value.getValue();
-				String kind = aCtHuman.kind.toString();
+				String kind = aCtHuman.kind.name();// toString();
 	
 				log.debug("[DATABASE]-Insert human");
 				int val = st.executeUpdate("INSERT INTO "+ dbName+ ".humans" +
@@ -67,6 +67,8 @@ public class DbHumans extends DbAbstract{
 			log.debug("Disconnected from database");
 		} catch (Exception e) {
 			logException(e);
+
+			System.out.println("520");
 		}
 	
 	
