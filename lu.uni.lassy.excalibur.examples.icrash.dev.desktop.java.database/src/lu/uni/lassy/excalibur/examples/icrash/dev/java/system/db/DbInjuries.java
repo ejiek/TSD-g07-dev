@@ -315,7 +315,7 @@ public class DbInjuries extends DbAbstract{
 	 *
 	 * @param aCtInjury The injury to delete from the database, it will use the ID/id to delete the injury
 	 */
-	static public void deleteInjury(CtInjury aCtInjury){
+	static public void deleteInjury(DtInjuryID aDtInjuryID){
 	
 		try {
 			conn = DriverManager.getConnection(url+dbName,userName,password);
@@ -326,10 +326,9 @@ public class DbInjuries extends DbAbstract{
 			
 			try{
 				String sql = "DELETE FROM "+ dbName+ ".injuries WHERE id = ?";
-				String id = aCtInjury.id.value.getValue();
 
 				PreparedStatement statement = conn.prepareStatement(sql);
-				statement.setString(1, id);
+				statement.setString(1, aDtInjuryID.value.getValue());
 				int rows = statement.executeUpdate();
 				log.debug(rows+" row deleted");				
 			}

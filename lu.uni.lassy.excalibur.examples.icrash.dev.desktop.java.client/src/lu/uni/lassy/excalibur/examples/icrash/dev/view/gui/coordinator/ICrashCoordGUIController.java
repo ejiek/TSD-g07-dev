@@ -35,6 +35,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
@@ -207,13 +208,14 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     
     @FXML
     void bttnAddInjuryForVictim_OnClick(ActionEvent event) {
-    	//injuryAdd();
-    	//showVictimInjuries();
+    	injuryAdd();
+    	showVictimInjuries();
     }
     
     @FXML
     void bttnDeleteInjuryForVictim_OnClick(ActionEvent event) {
-
+    	if (injuryDelete())
+    		showVictimInjuries();
     }
     ///////////////////////////////////////////////////////////
     /**
@@ -368,6 +370,25 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     	checkVictimAndSend(aDtCrisisID);
 	}
 
+	
+//	/**
+//	 * Shows the modify coordinator screen.
+//	 *
+//	 * @param type The type of edit to be done, this could be add or delete
+//	 */
+	private void injuryAdd(){
+		DtVictimID aDtVictimID = ((CtVictim)getObjectFromTableView(tblvwVictims)).id;
+		EtInjuryKind newIK = null;
+		newIK = cmbbxInjuryKind.getValue();
+		if  (newIK != null)
+		{
+			checkInjuryAndSend(aDtVictimID, newIK );
+		}
+		
+	}
+	
+	
+	
 //	/**
 //	 * Shows the modify coordinator screen.
 //	 *
@@ -383,6 +404,15 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		return false;
 	}
 	
+	private boolean injuryDelete(){
+		CtInjury aCtInjury = (CtInjury)getObjectFromTableView(tblvwInjuries);
+		if(aCtInjury != null){
+			DtInjuryID aDtInjuryID = aCtInjury.id;
+			checkInjuryAndDelete(aDtInjuryID);
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Populates the tableview with a list of alerts that have the same status as the one provided.
 	 */
@@ -789,9 +819,50 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 //	 * @param comment The message sent by the human about the accident
 //	 * @return The success of the method
 //	 */
+	public PtBoolean checkInjuryAndSend(DtVictimID aVIctimId, EtInjuryKind aEtInjuryKind){
+		try {
+			return userController.oeCreateInjury(aVIctimId, aEtInjuryKind);
+		} catch (ServerOfflineException | ServerNotBoundException e) {
+			showExceptionErrorMessage(e);
+		} catch (IncorrectFormatException e) {
+			showWarningIncorrectInformationEntered(e);
+		} catch (StringToNumberException e){
+			showWarningIncorrectData(e.getMessage());
+		}
+		return new PtBoolean(false);
+	}
+//	/**
+//	 * Checks the data is OK and if so will send it.
+//	 *
+//	 * @param hour The hour on the clock when the accident happened
+//	 * @param minute The minute on the clock when the accident happened
+//	 * @param second The second on the clock when the accident happened
+//	 * @param year The year of the accident
+//	 * @param month The month of the accident
+//	 * @param day The day of the month of the accident
+//	 * @param humanKind The type of human reporting the accident
+//	 * @param phoneNumber The phone number of the human who is reporting the accident
+//	 * @param latitude The latitude of the accident
+//	 * @param longitude The longitude of the accident
+//	 * @param comment The message sent by the human about the accident
+//	 * @return The success of the method
+//	 */
 	public PtBoolean checkVictimAndDelete(DtVictimID aVictimId){
 		try {
 			return userController.oeDeleteVictim(aVictimId);
+		} catch (ServerOfflineException | ServerNotBoundException | NullPointerException e) {
+			showExceptionErrorMessage(e);
+		} catch (IncorrectFormatException e) {
+			showWarningIncorrectInformationEntered(e);
+		} catch (StringToNumberException e){
+			showWarningIncorrectData(e.getMessage());
+		}
+		return new PtBoolean(false);
+	}
+	
+	public PtBoolean checkInjuryAndDelete(DtInjuryID aInjuryId){
+		try {
+			return userController.oeDeleteInjury(aInjuryId);
 		} catch (ServerOfflineException | ServerNotBoundException | NullPointerException e) {
 			showExceptionErrorMessage(e);
 		} catch (IncorrectFormatException e) {

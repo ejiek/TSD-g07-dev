@@ -66,6 +66,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertCorruptionKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -820,8 +821,14 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isSystemStarted();
 			//PreP2
 			isUserLoggedIn();
+			
 			CtAlert theAlert = cmpSystemCtAlert
 					.get(aDtAlertID.value.getValue());
+			//PreP3
+			if(theAlert.corruption == EtAlertCorruptionKind.corrupted){
+				throw new Exception("Alert is corrupted");
+			}
+			
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
 				//PostF1
@@ -1057,6 +1064,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					if (crisis.status.toString().equals(aEtCrisisStatus.toString()))
 						//PostF1
 						crisis.isSentToCoordinator(aActCoordinator);
+						//aActCoordinator.ieSendACrisis(crisis);
 				}
 				return new PtBoolean(true);
 			}
@@ -1157,6 +1165,23 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				cmpSystemCtVictim.remove(aDtVictimID.value.getValue());
 				DbVictims.deleteVictim(aDtVictimID);
+			}
+			return new PtBoolean(true);
+		} catch (Exception e) {
+			log.error("Exception in oeDeleteCoordinator..." + e);
+			return new PtBoolean(false);
+		}
+	}
+	
+	public PtBoolean oeDeleteInjury(DtInjuryID aDtInjuryID) throws RemoteException {
+		try {
+			//PreP1
+			isSystemStarted();
+			//PreP2
+			isUserLoggedIn();
+			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
+				cmpSystemCtInjury.remove(aDtInjuryID.value.getValue());
+				DbInjuries.deleteInjury(aDtInjuryID);
 			}
 			return new PtBoolean(true);
 		} catch (Exception e) {
@@ -1349,6 +1374,24 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			DtVictimID avId = new DtVictimID(new PtString("" + nextValueForVictimID_at_pre));
 			aCtVictim.init(avId, aCrisisId);
 			DbVictims.insertVictim(aCtVictim, aCrisisId);
+		}
+		catch(Exception e){
+			log.error("Exception in oeVictim..." + e);
+		}
+		return new PtBoolean(false);
+	}
+	
+	public  synchronized PtBoolean oeCreateInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind) throws RemoteException{
+		try{
+			//PreP1
+			isSystemStarted();
+			//PostF1
+			CtInjury aCtInjury = new CtInjury();
+			int nextValueForInjuryID_at_pre = ctState.nextValueForInjuryID.value.getValue();
+			ctState.nextValueForInjuryID.value = new PtInteger(ctState.nextValueForInjuryID.value.getValue() + 1);
+			DtInjuryID avId = new DtInjuryID(new PtString("" + nextValueForInjuryID_at_pre));
+			aCtInjury.init(avId, aVictimId, aEtInjuryKind);
+			DbInjuries.insertInjury(aCtInjury, aVictimId);
 		}
 		catch(Exception e){
 			log.error("Exception in oeVictim..." + e);

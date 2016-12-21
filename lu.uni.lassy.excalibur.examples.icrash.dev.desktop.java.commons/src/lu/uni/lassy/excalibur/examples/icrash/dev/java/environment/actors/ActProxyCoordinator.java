@@ -23,10 +23,12 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVi
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 
 /**
@@ -184,6 +186,8 @@ public interface ActProxyCoordinator extends ActProxyAuthenticated {
 	public PtBoolean ieSendAnAlert(CtAlert aCtAlert) throws RemoteException;
 
 	public PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException, NotBoundException;
+	public PtBoolean oeCreateInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind) throws RemoteException, NotBoundException;
 
 	public PtBoolean oeDeleteVictim(DtVictimID aVictimId) throws RemoteException, NotBoundException;
+	public PtBoolean oeDeleteInjury(DtInjuryID aInjuryId) throws RemoteException, NotBoundException;
 }

@@ -25,6 +25,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVi
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
@@ -239,10 +240,11 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 		return res;
 	}
 	
+	
 //	/* (non-Javadoc)
 //	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany#oeAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
 //	 */
-	synchronized public PtBoolean oeDeleteVictim(DtVictimID aVictimId)
+	synchronized public PtBoolean oeCreateInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind)
 			throws RemoteException, NotBoundException {
 
 		Logger log = Log4JUtils.getInstance().getLogger();
@@ -256,8 +258,56 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 		//set up ComCompany instance that performs the request
 		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
 
+		log.info("message ActCoordinator.oeVictim sent to system"); ////
+		PtBoolean res = iCrashSys_Server.oeCreateInjury(aVictimId, aEtInjuryKind);
+		
+		if (res.getValue() == true)
+			log.info("operation oeInjury successfully executed by the system");
+
+		return res;
+	}
+//	/* (non-Javadoc)
+//	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany#oeAlert(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate, lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment)
+//	 */
+	synchronized public PtBoolean oeDeleteVictim(DtVictimID aVictimId)
+			throws RemoteException, NotBoundException {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(), RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry
+				.lookup("iCrashServer");
+
+		//set up ComCompany instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
 		log.info("message ActCoordinator.oeDeleteVictim sent to system"); ////
 		PtBoolean res = iCrashSys_Server.oeDeleteVictim(aVictimId);
+		
+		if (res.getValue() == true)
+			log.info("operation oeVictim successfully executed by the system");
+
+		return res;
+	}
+	
+	synchronized public PtBoolean oeDeleteInjury(DtInjuryID aInjuryId)
+			throws RemoteException, NotBoundException {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(), RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry
+				.lookup("iCrashServer");
+
+		//set up ComCompany instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActCoordinator.oeDeleteVictim sent to system"); ////
+		PtBoolean res = iCrashSys_Server.oeDeleteInjury(aInjuryId);
 		
 		if (res.getValue() == true)
 			log.info("operation oeVictim successfully executed by the system");

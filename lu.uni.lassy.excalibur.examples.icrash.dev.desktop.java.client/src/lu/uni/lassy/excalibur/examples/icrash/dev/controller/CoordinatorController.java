@@ -26,9 +26,11 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntI
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtVictimID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtInjuryKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
@@ -357,7 +359,25 @@ public class CoordinatorController extends AbstractUserController {
 		return new PtBoolean(false);
 		
 	}
+
 	
+	public PtBoolean oeCreateInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException, StringToNumberException{
+		
+		if (this.getUserType() == UserType.Coordinator){
+			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+			try {
+				return actCoord.oeCreateInjury(aVictimId, aEtInjuryKind);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+		
+	}
 //	/**
 //	 * Checks the data passed is correct and if so, will create an alert in the system.
 //	 *
@@ -393,7 +413,23 @@ public class CoordinatorController extends AbstractUserController {
 				throw new ServerNotBoundException();
 			}
 		}
-		return new PtBoolean(false);
+		return new PtBoolean(false);	
+	}
+	
+	public PtBoolean oeDeleteInjury(DtInjuryID aInjuryId) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException, StringToNumberException{
 		
+		if (this.getUserType() == UserType.Coordinator){
+			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+			try {
+				return actCoord.oeDeleteInjury(aInjuryId);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);	
 	}
 }

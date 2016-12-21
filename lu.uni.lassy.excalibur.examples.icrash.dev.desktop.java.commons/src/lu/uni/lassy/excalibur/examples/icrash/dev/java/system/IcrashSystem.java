@@ -36,6 +36,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtHospitalID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtInjuryID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
@@ -254,7 +255,7 @@ public interface IcrashSystem extends Remote {
 	 */
 	public PtBoolean oeCreateVictim(DtCrisisID aCrisisId) throws RemoteException; 
 	
-	
+	public PtBoolean oeCreateInjury(DtVictimID aVictimId, EtInjuryKind aEtInjuryKind) throws RemoteException; 
 //	/**
 //	 * Creates a Victim in the system using the parameters passed
 //	 * Uses the actor coordinator for this method.
@@ -269,7 +270,7 @@ public interface IcrashSystem extends Remote {
 //	 * @throws RemoteException Thrown if the server is offline
 //	 */
 	public PtBoolean oeDeleteVictim(DtVictimID aVictimId) throws RemoteException; 
-	
+	public PtBoolean oeDeleteInjury(DtInjuryID aInjuryId) throws RemoteException; 
 	/**
 	 * Creates an Injury in the system using the parameters passed
 	 * Uses the actor coordinator for this method.

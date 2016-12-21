@@ -29,7 +29,6 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAl
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCRC;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
@@ -90,12 +89,24 @@ public class DbAlerts extends DbAbstract {
 	private static String alertHashCode(DtAlertID aId, String theStatus,
 			DtGPSLocation aDtGPSLocation, DtDateAndTime aInstant, DtComment aDtComment) {
         CRC32 crc = new CRC32();
-        crc.update(aId.value.getValue().getBytes());
-        crc.update(theStatus.getBytes());
-        crc.update(aDtGPSLocation.longitude.value.toString().getBytes());
-        crc.update(aDtGPSLocation.latitude.value.toString().getBytes());
-        crc.update(aInstant.toString().getBytes());
-        crc.update(aDtComment.value.getValue().getBytes());
+        crc.update(aId.value.getValue().toString().getBytes());
+        crc.update(theStatus.toString().getBytes());
+//        crc.update(Double.toString(aDtGPSLocation.longitude.value.getValue()).getBytes());
+//        crc.update(Double.toString(aDtGPSLocation.latitude.value.getValue()).getBytes());
+        crc.update(Integer.toString(aInstant.date.day.value.getValue()).getBytes());
+//        crc.update(Integer.toString(aInstant.date.month.value.getValue()).getBytes());
+//        crc.update(Integer.toString(aInstant.date.year.value.getValue()).getBytes());
+//        crc.update(Integer.toString(aInstant.time.hour.value.getValue()).getBytes());
+//        crc.update(Integer.toString(aInstant.time.minute.value.getValue()).getBytes());
+//        crc.update(Integer.toString(aInstant.time.second.value.getValue()).getBytes());
+        crc.update(aDtComment.value.getValue().toString().getBytes());
+        System.out.println(aId.value.getValue().toString());
+        System.out.println(theStatus.toString());
+        System.out.println(Double.toString(aDtGPSLocation.longitude.value.getValue()));
+        System.out.println(Double.toString(aDtGPSLocation.latitude.value.getValue()));
+        System.out.println(aInstant.toString());
+        System.out.println(aDtComment.value.getValue().toString());
+        System.out.println(Long.toString((long)crc.getValue()));
         return Long.toString((long)crc.getValue());   
     }
 	
@@ -259,18 +270,13 @@ public class DbAlerts extends DbAbstract {
 							res.getString("comment")));
 					
 					if (alertHashCode(aId, theStatus, aDtGPSLocation, aInstant, aDtComment).equals(res.getString("crc")) ){
-						
 						if(ADbName.equals(dbBackUpName)){
-							
-						} else{
-							
-						}
-						
-						
+							aCorruption = EtAlertCorruptionKind.restored;
+						}				
 					} 
 					else {
 						if(ADbName.equals(dbBackUpName)){
-
+							aCorruption = EtAlertCorruptionKind.corrupted;
 						} else {
 							return getInfo(alertId, backupConn, dbBackUpName);
 						}
@@ -416,6 +422,9 @@ public class DbAlerts extends DbAbstract {
 
 					DtComment aDtComment = new DtComment(new PtString(
 							res.getString("comment")));
+					
+					System.out.println((alertHashCode(aId, theStatus, aDtGPSLocation, aInstant, aDtComment)));
+					System.out.println(res.getString("crc"));
 					
 					if (alertHashCode(aId, theStatus, aDtGPSLocation, aInstant, aDtComment).equals(res.getString("crc")) ){
 						aCtAlert.init(aId, aStatus, aDtGPSLocation, aInstant,
@@ -879,7 +888,7 @@ public class DbAlerts extends DbAbstract {
 	static private void bindAlertHuman(String AdbName, Connection aConn, CtAlert aCtAlert, CtHuman aCtHuman){
 		try {
 		String sql = "UPDATE " + AdbName
-				+ ".alerts SET human =?, `crc` = ?, `corruption` = ? WHERE id = ?";
+				+ ".alerts SET human =?, crc =?, corruption =? WHERE id = ?";
 		String id = aCtAlert.id.value.getValue();
 		String humanPhone = aCtHuman.id.value.getValue();
 		String crc = alertHashCode( aCtAlert.id, aCtAlert.status.toString(),

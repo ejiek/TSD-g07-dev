@@ -49,6 +49,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHu
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtInjury;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtVictim;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertCorruptionKind;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
@@ -421,9 +422,18 @@ public abstract class AbstractGUIController implements Initializable {
 				return new ReadOnlyObjectWrapper<Double>(alert.getValue().location.latitude.value.getValue());
 			}
 		});
+				
 		commentCol.setCellValueFactory(new Callback<CellDataFeatures<CtAlert, String>, ObservableValue<String>>() {
 			public ObservableValue<String> call(CellDataFeatures<CtAlert, String> alert) {
-				return new ReadOnlyObjectWrapper<String>(alert.getValue().comment.value.getValue());
+				String tempComment;
+				if (alert.getValue().corruption.equals(EtAlertCorruptionKind.regular)){
+					tempComment = alert.getValue().comment.value.getValue();
+				} else if(alert.getValue().corruption.equals(EtAlertCorruptionKind.restored)){
+					tempComment = "Restored:  "+alert.getValue().comment.value.getValue();
+				} else if(alert.getValue().corruption.equals(EtAlertCorruptionKind.corrupted)){
+					tempComment = "Corrupted: "+alert.getValue().comment.value.getValue();
+				} else tempComment = "Unknown error";
+				return new ReadOnlyObjectWrapper<String>(tempComment);
 			}
 		});
 		statusCol.setCellValueFactory(new Callback<CellDataFeatures<CtAlert, String>, ObservableValue<String>>() {
